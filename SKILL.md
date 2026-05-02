@@ -1,7 +1,7 @@
 ---
-name: vmscript-helper
+name: vm-script-skill
 description: "VisionMaster（VM）脚本开发辅助。用户提到 VisionMaster、VM 脚本、UserScript、IProcessMethods、Script.Methods、Get/Set 接口、图像/ROI/数组读写时触发"
-version: 1.1.0
+version: 1.2.0
 ---
 
 # VisionMaster 脚本开发技能
@@ -25,11 +25,12 @@ version: 1.1.0
 - 脚本基类必须是 `UserScript`，接口必须实现 `IProcessMethods`，命名空间使用 `Script.Methods`
 - 用户脚本的输出和输出约定在 UserProperty.cs 中，用户的脚本逻辑在 UserSCript.cs 中。首先读取这两个文件，确定输出和输出与已有的逻辑。再结合用户的请求进行下一步。
 - 代码组织上，`Process()` 放在上方，辅助方法放在下方,避免`Process()` 中出现过长的逻辑，需要合理的拆分不同的功能为方法，然后脚本内容调用。
-- 生成代码时删除脚本结构化的注释，只保留必要的注释。
+- 生成代码时删除脚本结构化的注释，需要给每一个方法都添加注释。
 - 获取输入输出时，应当先尝试直接赋值，只有当直接赋值出现错误时，再考虑使用接口获取值。
 - 只有当需要显示释放资源的时候，才会写 `Dispose()`。
 - 脚本不考虑性能优化，以逻辑简单清晰为最主要。
 - 当分析用户的意图需要调用第三方库时，优先分析目录中的`*.csproj`文件，如果缺少对应的库则直接中断生成并提示用户。
+- 当你发现自己需要反编译才能获取到需要的信息时，你应当首先查看references目录下的文件，如果没有相关信息则中断生成并提示用户。
 
 ## 明确不支持
 
