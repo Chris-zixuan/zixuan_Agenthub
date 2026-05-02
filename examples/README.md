@@ -6,6 +6,7 @@
 |------|------|
 | [01-basic-template.cs](01-basic-template.cs) | 基础脚本模板 — Init/Process/Dispose 生命周期、数据读写、全局变量、模块控制 |
 | [02-canny-edge-detection.cs](02-canny-edge-detection.cs) | OpenCV 图像处理 — Canny 边缘检测、ImageData↔Mat 转换、轮廓查找 |
+| [03-roi.cs](03-roi.cs) | ROI 处理示例 — ROI 网格分割、几何变换、数组输出 |
 
 ## 使用方式
 
