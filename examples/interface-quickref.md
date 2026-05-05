@@ -106,6 +106,32 @@ Mat matImage = ImageDataToMat(imgData);
 
 ---
 
+## 3b. Bitmap ↔ ImageData 转换
+
+见 [Script.ExMethods.cs](../references/Script.ExMethods.cs)
+
+```csharp
+// Bitmap → ImageData
+ImageData imgOut = BitmapToImageData(bmpImage);
+
+// ImageData → Bitmap
+Bitmap bmpImage = ImageDataToBitmap(imgData);
+```
+
+**支持的像素格式：**
+
+| Bitmap 像素格式 | ImageData 像素格式 | 说明 |
+|---|---|---|
+| `Format8bppIndexed` | `MONO8` | 灰度图，`ImageDataToBitmap` 会自动设置 256 级灰度调色板 |
+| `Format24bppRgb` | `RGB24` | 彩色图，转换时自动交换 BGR↔RGB 通道顺序 |
+
+**注意事项：**
+- Bitmap 使用 BGR 通道顺序，ImageData 使用 RGB 通道顺序，转换方法内部自动处理
+- `ImageDataToBitmap` 返回的 Bitmap 需要调用方在使用完毕后 `Dispose()`
+- 不支持其他像素格式（如 `Format32bppArgb`），如需处理请先转换为上述两种格式
+
+---
+
 ## 4. 全局变量
 
 | 操作 | 接口                                                                         | 备注                                  |

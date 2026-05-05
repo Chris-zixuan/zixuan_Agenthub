@@ -5,11 +5,17 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 {
     int processCount;
 
+    /// <summary>
+    /// 预编译时变量初始化
+    /// </summary>
     public void Init()
     {
         processCount = 0;
     }
 
+    /// <summary>
+    /// 流程执行函数 - ROI 网格分割
+    /// </summary>
     public bool Process()
     {
         int rows = 行数;

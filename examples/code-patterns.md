@@ -110,7 +110,6 @@ public bool Process()
 
 ```csharp
 using System;
-using System.Runtime.InteropServices;
 using Script.Methods;
 using OpenCvSharp;
 
@@ -137,7 +136,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
             return false;
         }
 
-        // 2. ImageData → Mat
+        // 2. ImageData → Mat（转换方法见 references/Script.ExMethods.cs）
         Mat srcMat = ImageDataToMat(imgIn);
 
         // 3. 图像处理逻辑（在此替换为实际算法）
@@ -157,73 +156,88 @@ public partial class UserScript : ScriptMethods, IProcessMethods
         processCount++;
         return true;
     }
-
-    public virtual void Dispose()
-    {
-    }
-
-    #region OpenCV 转换方法
-
-    /// <summary>
-    /// ImageData 转 Mat
-    /// </summary>
-    private Mat ImageDataToMat(ImageData img)
-    {
-        Mat matImage = new Mat();
-        if (ImagePixelFormate.MONO8 == img.PixelFormat)
-        {
-            matImage = Mat.Zeros(img.Height, img.Width, MatType.CV_8UC1);
-            IntPtr grayPtr = Marshal.AllocHGlobal(img.Width * img.Height);
-            Marshal.Copy(img.Buffer, 0, matImage.Ptr(0), img.Buffer.Length);
-            Marshal.FreeHGlobal(grayPtr);
-        }
-        else if (ImagePixelFormate.RGB24 == img.PixelFormat)
-        {
-            matImage = Mat.Zeros(img.Height, img.Width, MatType.CV_8UC3);
-            IntPtr rgbPtr = Marshal.AllocHGlobal(img.Width * img.Height * 3);
-            Marshal.Copy(img.Buffer, 0, matImage.Ptr(0), img.Buffer.Length);
-            Cv2.CvtColor(matImage, matImage, ColorConversionCodes.RGB2BGR);
-            Marshal.FreeHGlobal(rgbPtr);
-        }
-        return matImage;
-    }
-
-    /// <summary>
-    /// Mat 转 ImageData
-    /// </summary>
-    private ImageData MatToImageData(Mat matImage)
-    {
-        ImageData imgOut = new ImageData();
-        byte[] buffer = new Byte[matImage.Width * matImage.Height * matImage.Channels()];
-        Marshal.Copy(matImage.Ptr(0), buffer, 0, buffer.Length);
-
-        if (1 == matImage.Channels())
-        {
-            imgOut.Buffer = buffer;
-            imgOut.Width = matImage.Width;
-            imgOut.Height = matImage.Height;
-            imgOut.PixelFormat = ImagePixelFormate.MONO8;
-        }
-        else if (3 == matImage.Channels())
-        {
-            // 交换 R 与 B 通道
-            for (int i = 0; i < buffer.Length - 2; i += 3)
-            {
-                byte temp = buffer[i];
-                buffer[i] = buffer[i + 2];
-                buffer[i + 2] = temp;
-            }
-            imgOut.Buffer = buffer;
-            imgOut.Width = matImage.Width;
-            imgOut.Height = matImage.Height;
-            imgOut.PixelFormat = ImagePixelFormate.RGB24;
-        }
-        return imgOut;
-    }
-
-    #endregion
 }
 ```
+
+> `ImageDataToMat` / `MatToImageData` 的完整实现见 [references/Script.ExMethods.cs](../references/Script.ExMethods.cs) 或 [examples/02-canny-edge-detection.cs](02-canny-edge-detection.cs)
+
+---
+
+## 模式 4b：图像处理管道（含 System.Drawing.Bitmap）
+
+**场景**：使用 `System.Drawing.Bitmap` 进行图像处理（无需 OpenCvSharp）
+
+```csharp
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
+using Script.Methods;
+
+public partial class UserScript : ScriptMethods, IProcessMethods
+{
+    int processCount;
+
+    public void Init()
+    {
+        processCount = 0;
+    }
+
+    /// <summary>
+    /// 流程执行函数
+    /// </summary>
+    public bool Process()
+    {
+        // 1. 直接赋值获取输入图像
+        ImageData imgIn = inputImage;
+
+        if (imgIn.Buffer == null || imgIn.Width <= 0 || imgIn.Height <= 0)
+        {
+            ConsoleWrite("图像数据无效");
+            return false;
+        }
+
+        // 2. ImageData → Bitmap（转换方法见 references/Script.ExMethods.cs）
+        Bitmap srcBmp = ImageDataToBitmap(imgIn);
+
+        // 3. 图像处理逻辑（在此替换为实际算法）
+        // 例如：使用 Graphics 绘制、像素级操作等
+        Bitmap resultBmp = ProcessWithBitmap(srcBmp);
+
+        // 4. Bitmap → ImageData
+        ImageData imgOut = BitmapToImageData(resultBmp);
+
+        // 5. 直接赋值设置输出
+        outputImage = imgOut;
+
+        // 6. 释放临时资源
+        srcBmp.Dispose();
+        resultBmp.Dispose();
+
+        processCount++;
+        return true;
+    }
+
+    /// <summary>
+    /// 使用 Bitmap 处理图像的示例方法
+    /// </summary>
+    /// <param name="srcBmp">输入 Bitmap</param>
+    /// <returns>处理后的 Bitmap</returns>
+    private Bitmap ProcessWithBitmap(Bitmap srcBmp)
+    {
+        // 示例：创建副本并处理
+        Bitmap result = new Bitmap(srcBmp.Width, srcBmp.Height, srcBmp.PixelFormat);
+        using (Graphics g = Graphics.FromImage(result))
+        {
+            g.DrawImage(srcBmp, 0, 0);
+            // 在此添加绘制/处理逻辑...
+        }
+        return result;
+    }
+}
+```
+
+> `BitmapToImageData` / `ImageDataToBitmap` 的完整实现见 [references/Script.ExMethods.cs](../references/Script.ExMethods.cs)。支持 `Format8bppIndexed`（MONO8）和 `Format24bppRgb`（RGB24）两种像素格式，转换时自动处理 stride 对齐和 BGR/RGB 通道交换。
 
 ---
 
@@ -603,6 +617,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 | 多类型数据转发 | 模式 2                 |
 | 批量数据处理   | 模式 3                 |
 | 图像滤波/检测  | 模式 4 + 模式 12       |
+| 图像处理（无需 OpenCV） | 模式 4b + 模式 12 |
 | ROI 分割/变换  | 模式 5 或 模式 6       |
 | 流程控制/分支  | 模式 7 + 模式 8        |
 | 统计/累积计算  | 模式 9                 |

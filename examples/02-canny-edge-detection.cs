@@ -10,7 +10,7 @@ using OpenCvSharp;
 public partial class UserScript : ScriptMethods, IProcessMethods
 {
     // 全局字段
-    private Mat processingMat;
+    int processCount;
     private Mat edgeMat;
 
     /// <summary>
@@ -18,7 +18,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
     /// </summary>
     public void Init()
     {
-        processingMat = new Mat();
+        processCount = 0;
         edgeMat = new Mat();
     }
 
@@ -61,7 +61,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
             Cv2.FindContours(edgeMat, out contours, out hierarchy,
                 RetrievalModes.External, ContourApproximationModes.APPROX_SIMPLE);
 
-            Mat resultImage = srcImage.Clone();
+            Mat resultImage = srcImage.Clone(); // 克隆输入图像，避免修改原始数据（ImageData 引用传递）
             Cv2.DrawContours(resultImage, contours, -1, new Scalar(0, 255, 0), 2);
 
             // ========== 5. 直接赋值设置输出 ==========
@@ -97,8 +97,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
     /// </summary>
     public virtual void Dispose()
     {
-        processingMat?.Dispose();
-        edgeMat?.Dispose();
+        edgeMat.Dispose();
     }
 
     #region OpenCV 转换方法
@@ -112,17 +111,13 @@ public partial class UserScript : ScriptMethods, IProcessMethods
         if (ImagePixelFormate.MONO8 == img.PixelFormat)
         {
             matImage = Mat.Zeros(img.Height, img.Width, MatType.CV_8UC1);
-            IntPtr grayPtr = Marshal.AllocHGlobal(img.Width * img.Height);
             Marshal.Copy(img.Buffer, 0, matImage.Ptr(0), img.Buffer.Length);
-            Marshal.FreeHGlobal(grayPtr);
         }
         else if (ImagePixelFormate.RGB24 == img.PixelFormat)
         {
             matImage = Mat.Zeros(img.Height, img.Width, MatType.CV_8UC3);
-            IntPtr rgbPtr = Marshal.AllocHGlobal(img.Width * img.Height * 3);
             Marshal.Copy(img.Buffer, 0, matImage.Ptr(0), img.Buffer.Length);
             Cv2.CvtColor(matImage, matImage, ColorConversionCodes.RGB2BGR);
-            Marshal.FreeHGlobal(rgbPtr);
         }
         return matImage;
     }

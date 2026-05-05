@@ -4,7 +4,6 @@ using Script.Methods;
 
 public partial class UserScript : ScriptMethods, IProcessMethods
 {
-    //the count of process
     int processCount;
 
     /// <summary>
@@ -57,7 +56,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
         // 图像数据
         ImageData imageData = in6;
-        out6 = imageData;
+        out6 = imageData; // 注意：ImageData 直接赋值为引用传递，如需独立副本需通过 Mat 转换
 
         // ROIBOX 数据
         RoiboxData[] roiData = in7;

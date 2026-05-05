@@ -1,17 +1,17 @@
 ---
 name: vm-script-skill
-description: "VisionMaster（VM）脚本开发辅助。用户提到：帮我编写脚本、写脚本，输入输出，图像处理，模块参数，全局变量，调试输出等相关内容时触发。优先输出可直接使用的 C# 代码。"
-version: 2.2.4
+description: "VisionMaster（VM）脚本开发辅助。用户提到：帮我编写脚本、编写脚本，输入输出，图像处理，模块参数，全局变量，调试输出等相关内容时触发。优先输出可直接使用的 C# 代码。"
+version: 2.5.0
 author: ChrisYang
 tags:
-    - VisionMaster
-    - 脚本开发
-    - C# 编程
-    - 数据处理
-    - 图像处理
-    - 模块参数
-    - 全局变量
-    - 调试输出
+  - VisionMaster
+  - 脚本开发
+  - C# 编程
+  - 数据处理
+  - 图像处理
+  - 模块参数
+  - 全局变量
+  - 调试输出
 ---
 
 # VisionMaster 脚本开发技能
@@ -39,7 +39,7 @@ tags:
 - 代码组织：`Process()` 放在上方，辅助方法放在下方
 - 生成代码时删除脚本结构化注释，给每一个方法添加 XML 注释
 - **变量读写一律使用直接赋值**（如 `out0 = in0`）
-    - **例外（唯一允许使用遗留接口的场景）**：需要按字符串动态访问变量名（如遍历全局变量列表）时，可以使用 `GetIntValue`、`SetIntValue` 等接口；其他所有场景一律直接赋值
+  - **例外（唯一允许使用遗留接口的场景）**：需要按字符串动态访问变量名（如遍历全局变量列表）时，可以使用 `GetIntValue`、`SetIntValue` 等接口；其他所有场景一律直接赋值
 - 仅在需要显式释放资源时才编写 `Dispose()`
 - 以逻辑简单清晰为首要目标，不做过度优化，但基本的资源管理必须做（如 `Mat` 用完 Dispose、大对象用字段缓存避免每帧 new）
 - 简单逻辑自行实现或调用 `references/` 下的方法；避免为简单逻辑引入不必要的第三方库
@@ -77,12 +77,12 @@ VM 脚本的输入输出变量在 `UserProperty.cs` 中定义，在 `UserScript.
 
 三条核心规则，记住即可：
 
-| 规则 | VM 类型示例 | 脚本 C# 类型 | 示例 |
-|------|-----------|-------------|------|
-| 标量 → 基础类型 | INT, FLOAT, STRING, DOUBLE | `int`, `float`, `string`, `double` | `int val = in0; out0 = val;` |
-| IMAGE → ImageData | IMAGE | `ImageData`（特例，非数组） | `ImageData img = imgIn; imgOut = img;` |
-| 复合 → `<Type>Data[]` | POINT, ROIBOX, CIRCLE, RECT, LINE, ELLIPSE, ANNULUS, POLYGON, CONTOUR_POINT | `PointData[]`, `RoiboxData[]` … | `PointData[] pts = in0; out0 = pts;` |
-| 数组 → 直接用 | INT 数组, FLOAT 数组, STRING 数组, DOUBLE 数组 | `int[]`, `float[]`, `string[]`, `double[]` | `int[] arr = in0; out0 = arr;` |
+| 规则                  | VM 类型示例                                                                 | 脚本 C# 类型                                 | 示例                                   |
+| --------------------- | --------------------------------------------------------------------------- | -------------------------------------------- | -------------------------------------- |
+| 标量 → 基础类型       | INT, FLOAT, STRING, DOUBLE, BYTE                                            | `int`, `float`, `string`, `double`, `byte[]` | `int val = in0; out0 = val;`           |
+| IMAGE → ImageData     | IMAGE                                                                       | `ImageData`（特例，非数组）                  | `ImageData img = imgIn; imgOut = img;` |
+| 复合 → `<Type>Data[]` | POINT, ROIBOX, CIRCLE, RECT, LINE, ELLIPSE, ANNULUS, POLYGON, CONTOUR_POINT | `PointData[]`, `RoiboxData[]` …              | `PointData[] pts = in0; out0 = pts;`   |
+| 数组 → 直接用         | INT 数组, FLOAT 数组, STRING 数组, DOUBLE 数组                              | `int[]`, `float[]`, `string[]`, `double[]`   | `int[] arr = in0; out0 = arr;`         |
 
 **特别注意**：除标量、数组和 IMAGE 外的复合类型（如 POINT, ROIBOX 等），在脚本中均映射为对应的 `<Type>Data[]` 数组类型。IMAGE 类型直接映射为 `ImageData`，不是数组。
 
@@ -98,13 +98,13 @@ VM 脚本的输入输出变量在 `UserProperty.cs` 中定义，在 `UserScript.
 
 以下为脚本运行中高频出现的错误及快速排查方向：
 
-| 现象 | 可能原因 | 检查方式 |
-|------|----------|----------|
-| `NullReferenceException` | 输入变量未连线或数据为空 | 检查对应输入是否已绑定模块输出，数据是否到达 |
-| 类型转换错误 | 变量类型定义与赋值类型不匹配（例如将 `float` 赋给 INT 变量） | 核对 `UserProperty.cs` 中的类型定义与脚本中的实际类型 |
-| 内存占用持续增长 | 未释放 Mat、每帧重复创建大对象 | 确保所有 new 出的 Mat 用完后调用 `Dispose()`；将大数组、Mat 等缓存为类字段 |
-| 输出变量值不更新 | 未对输出变量赋值，或赋值放在了条件分支中未执行 | 确认输出变量在每个 `Process()` 末尾均被赋值 |
-| 图像显示异常（黑图/错位） | 直接修改了只读的输入图像，或未克隆就修改了共享图像 | 对需要修改的图像先通过 `Mat` 克隆再处理 |
+| 现象                      | 可能原因                                                     | 检查方式                                                                   |
+| ------------------------- | ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `NullReferenceException`  | 输入变量未连线或数据为空                                     | 检查对应输入是否已绑定模块输出，数据是否到达                               |
+| 类型转换错误              | 变量类型定义与赋值类型不匹配（例如将 `float` 赋给 INT 变量） | 核对 `UserProperty.cs` 中的类型定义与脚本中的实际类型                      |
+| 内存占用持续增长          | 未释放 Mat、每帧重复创建大对象                               | 确保所有 new 出的 Mat 用完后调用 `Dispose()`；将大数组、Mat 等缓存为类字段 |
+| 输出变量值不更新          | 未对输出变量赋值，或赋值放在了条件分支中未执行               | 确认输出变量在每个 `Process()` 末尾均被赋值                                |
+| 图像显示异常（黑图/错位） | 直接修改了只读的输入图像，或未克隆就修改了共享图像           | 对需要修改的图像先通过 `Mat` 克隆再处理                                    |
 
 > 更多调试输出技巧见下文“调试输出建议”。
 
@@ -129,9 +129,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
         return true;
     }
 
-    public virtual void Dispose()
-    {
-    }
+    // 仅在需要释放非托管资源时添加 Dispose()
 }
 ```
 
@@ -147,7 +145,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 ## 调试输出建议
 
-- 推荐使用 `SetStringByName("调试信息", msg)` 将调试内容写入字符串类型的全局变量，通过显示模块观察
+- 推荐使用 `GlobalVariableModule.SetValue("调试信息", msg)` 将调试内容写入字符串类型的全局变量，通过显示模块观察
 - `ShowMessageBox` 会暂停整个流程，仅用于关键断点调试，生产环境务必删除
 - 善用 `processCount` 字段打印每帧执行信息（例如“Process 第 N 次执行，输入值：...”）
 
@@ -155,14 +153,14 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 ### 文件索引
 
-| 文件 | 用途 |
-|------|------|
-| [references/Script.Interface.cs](./references/Script.Interface.cs) | 遗留接口签名原始定义 |
-| [references/Script.DataStruct.cs](./references/Script.DataStruct.cs) | 数据结构字段定义 |
-| [references/Script.ExMethods.cs](./references/Script.ExMethods.cs) | Mat ↔ ImageData 转换方法 |
-| [examples/interface-quickref.md](./examples/interface-quickref.md) | 变量类型映射 + 接口速查索引 |
-| [examples/code-patterns.md](./examples/code-patterns.md) | 代码模式库（13 种场景模板） |
-| [examples/](./examples/) | 完整脚本示例 |
+| 文件                                                                 | 用途                              |
+| -------------------------------------------------------------------- | --------------------------------- |
+| [references/Script.Interface.cs](./references/Script.Interface.cs)   | 遗留接口签名原始定义              |
+| [references/Script.DataStruct.cs](./references/Script.DataStruct.cs) | 数据结构字段定义                  |
+| [references/Script.ExMethods.cs](./references/Script.ExMethods.cs)   | Mat / Bitmap ↔ ImageData 转换方法 |
+| [examples/interface-quickref.md](./examples/interface-quickref.md)   | 变量类型映射 + 接口速查索引       |
+| [examples/code-patterns.md](./examples/code-patterns.md)             | 代码模式库（12 种场景模板）       |
+| [examples/](./examples/)                                             | 完整脚本示例                      |
 
 ### 注意事项
 
@@ -186,13 +184,13 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 根据用户描述，确定以下要素：
 
-| 要素 | 说明 |
-|------|------|
+| 要素     | 说明                                                           |
+| -------- | -------------------------------------------------------------- |
 | 数据类型 | 涉及哪些 VM 变量类型，对应脚本中什么 C# 类型（查类型映射规则） |
-| 数据流向 | 哪些是输入，哪些是输出，是否需要中间变量 |
-| 处理逻辑 | 算法/计算/变换的具体要求 |
-| 外部依赖 | 是否需要 OpenCvSharp、通信模块等 |
-| 生命周期 | 是否需要 Init() 初始化 / Dispose() 释放资源 |
+| 数据流向 | 哪些是输入，哪些是输出，是否需要中间变量                       |
+| 处理逻辑 | 算法/计算/变换的具体要求                                       |
+| 外部依赖 | 是否需要 OpenCvSharp、通信模块等                               |
+| 生命周期 | 是否需要 Init() 初始化 / Dispose() 释放资源                    |
 
 ### Step 3：确认变量映射
 
@@ -201,7 +199,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 1. **每个输入变量**：变量名 → C# 类型（如 `in0` → `int`，`in1` → `PointData[]`）
 2. **每个输出变量**：变量名 → C# 类型
 3. **需要的数据结构字段**：查 [Script.DataStruct.cs](./references/Script.DataStruct.cs) 确认
-4. **需要的转换方法**：如 `ImageDataToMat` / `MatToImageData`，见 [Script.ExMethods.cs](./references/Script.ExMethods.cs)
+4. **需要的转换方法**：如 `ImageDataToMat` / `MatToImageData` / `BitmapToImageData` / `ImageDataToBitmap`，见 [Script.ExMethods.cs](./references/Script.ExMethods.cs)
 
 **关键原则**：
 
@@ -215,14 +213,16 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 #### 按需求查找必读文件
 
-| 你想做什么 | 必须先打开阅读的文件 |
-|------------|----------------------|
-| 了解变量类型映射、直接赋值写法 | `examples/interface-quickref.md` |
-| 把输入图像转成 Mat | `examples/02-canny-edge-detection.cs` 和 `references/Script.ExMethods.cs` |
-| 处理 ROI（裁剪、遍历、分析） | `examples/03-roi.cs` 和 `references/Script.DataStruct.cs` |
-| 读取/写入多个不同类型的全局变量 | `examples/01-basic-template.cs`（查看多变量处理模式） |
-| 不确定数据结构字段名 | `references/Script.DataStruct.cs` |
-| 需要遗留接口签名（仅动态名场景） | `references/Script.Interface.cs` |
+| 你想做什么                       | 必须先打开阅读的文件                                                      |
+| -------------------------------- | ------------------------------------------------------------------------- |
+| 了解变量类型映射、直接赋值写法   | `examples/interface-quickref.md`                                          |
+| 把输入图像转成 Mat               | `examples/02-canny-edge-detection.cs` 和 `references/Script.ExMethods.cs` |
+| 把输入图像转成 Bitmap            | `references/Script.ExMethods.cs`                                          |
+| 处理 ROI（裁剪、遍历、分析）     | `examples/03-roi.cs` 和 `references/Script.DataStruct.cs`                 |
+| 读取/写入多个不同类型的全局变量  | `examples/01-basic-template.cs`（查看多变量处理模式）                     |
+| 不确定数据结构字段名             | `references/Script.DataStruct.cs`                                         |
+| 需要遗留接口签名（仅动态名场景） | `references/Script.Interface.cs`                                          |
+| 想要操作CAD图纸，完成图纸转换等  | `examples/04-trans-CAD-file.cs`                                           |
 
 #### 查找 API 的强制流程
 
@@ -235,9 +235,9 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 #### 模式组合示例
 
-- 用户需要“图像预处理 + ROI 内统计” → 组合模式4（图像处理）+ 模式6（ROI遍历）
-- 用户需要“获取多个变量并做数学运算输出” → 模式2（多变量输入）+ 模式7（计算与变换）
-- 用户需要“从全局变量获取参数、处理图像后输出” → 模式1（全局变量读取）+ 模式4（图像处理）
+- 用户需要”图像预处理 + ROI 内统计” → 组合模式4（图像处理管道）+ 模式5（ROI 处理）
+- 用户需要”ROI 网格分割并输出子区域” → 组合模式6（ROI 网格分割）+ 模式5（ROI 处理）
+- 用户需要”从全局变量获取参数、处理图像后输出” → 模式7（全局变量控制流程）+ 模式4（图像处理管道）
 
 详细模式组合指南见 [code-patterns.md](./examples/code-patterns.md#模式组合指南)。
 
@@ -279,10 +279,12 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 ### 扩展清单
 
-| 场景 | 状态 | 说明 |
-|------|------|------|
-| 2D 脚本（标准） | ✅ 已支持 | ScriptMethods + IProcessMethods |
-| 3D 脚本 | 🔲 待扩展 | 需新增 VM3DScriptBase 基类、3D 类型映射、3D 示例 |
-| OpenCvSharp 集成 | ✅ 已支持 | 示例 02 + 模式 4 |
-| 其他第三方库 | 🔲 按需扩展 | 新增 references + examples + 校验 .csproj |
+| 场景                       | 状态        | 说明                                             |
+| -------------------------- | ----------- | ------------------------------------------------ |
+| 2D 脚本（标准）            | ✅ 已支持   | ScriptMethods + IProcessMethods                  |
+| 3D 脚本                    | 🔲 待扩展   | 需新增 VM3DScriptBase 基类、3D 类型映射、3D 示例 |
+| OpenCvSharp 集成           | ✅ 已支持   | 示例 02 + 模式 4                                 |
+| System.Drawing.Bitmap 集成 | ✅ 已支持   | Script.ExMethods.cs + 模式 4b                    |
+| 其他第三方库               | 🔲 按需扩展 | 新增 references + examples + 校验 .csproj        |
+
 > 扩展时注意：references/ 放原始定义，examples/ 放可运行示例和速查文档，SKILL.md 只放规则和链接，不重复详细内容。
