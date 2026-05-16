@@ -85,4 +85,4 @@ imgOut = img;           // 写图像
 
 ## 扩展新 Skill
 
-在根目录新建子目录，结构参考 `visionmaster-scripthelper/`：必须包含 `SKILL.md`（技能定义）；可选包含 `references/`（权威 API 定义）和 `examples/`（示例与速查文档）。
+在根目录新建子目录，结构参考 `visionmaster-scripthelper/`：必须包含 `SKILL.md`（技能定义）；可选包含 `references/`（权威 API 定义）和 `examples/`（示例与速查文档）
