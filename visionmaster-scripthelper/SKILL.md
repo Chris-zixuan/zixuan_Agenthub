@@ -1,6 +1,6 @@
 ---
-name: vm-script-skill
-description: "VisionMaster（VM）脚本开发辅助。用户提到：帮我编写脚本、编写脚本，输入输出，图像处理，模块参数，全局变量，调试输出等相关内容时触发。优先输出可直接使用的 C# 代码。"
+name: visionmaster-scripthelper
+description: "用户正在开发、修改或调试 VisionMaster C# 脚本（UserScript.cs / UserProperty.cs），或询问 VM 变量类型映射、模块参数读写、全局变量、图像处理等 VM 脚本具体问题时触发。优先输出可直接使用的 C# 代码。"
 version: 2.5.0
 author: ChrisYang
 tags:
@@ -45,7 +45,7 @@ tags:
 - 简单逻辑自行实现或调用 `references/` 下的方法；避免为简单逻辑引入不必要的第三方库
 - 需要第三方库时，先分析 `*.csproj` 确认库存在；缺少则中断生成并提示用户
 - 需要的信息不在 `references/` 或 `examples/` 中时，中断生成并提示用户，不要臆造，不要尝试去外部搜索
-- 每次脚本生成完毕后，尝试调用 `./assets/find_msbuild.ps1` 进行编译校验；若无法运行脚本（如环境限制），则执行完整的静态代码审查，并向用户说明“自动编译校验无法完成，请手动编译验证”
+- 每次脚本生成完毕后，尝试调用 skill 安装目录下的 `assets/find_msbuild.ps1`（完整路径示例：`~/.claude/skills/visionmaster-scripthelper/assets/find_msbuild.ps1`）进行编译校验；若无法运行脚本（如环境限制），则执行完整的静态代码审查，并向用户说明”自动编译校验无法完成，请手动编译验证”
 
 ## 明确不支持
 
@@ -125,7 +125,6 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
     public bool Process()
     {
-        // 业务逻辑
         return true;
     }
 
@@ -263,7 +262,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 - [ ] 代码基于 .NET Framework 4.6.1，未使用 4.6.1 之后的 API
 - [ ] 每个方法都有 XML 注释
 - [ ] 结构化注释（如 `//You can add your codes here`）已删除
-- [ ] 已执行或尝试执行编译校验：若 `./assets/find_msbuild.ps1` 可运行则编译至通过；否则进行静态审查，并向用户说明“自动编译校验无法完成，请手动编译确认”
+- [ ] 已执行或尝试执行编译校验：若 skill 安装目录下的 `assets/find_msbuild.ps1` 可运行则编译至通过；否则进行静态审查，并向用户说明”自动编译校验无法完成，请手动编译确认”
 
 ---
 

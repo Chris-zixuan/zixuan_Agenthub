@@ -38,7 +38,7 @@
 | RECT          | `RectData[]`         | `RectData[] rs = in0;`         | `out0 = rs;`  |
 | LINE          | `LineData[]`         | `LineData[] ls = in0;`         | `out0 = ls;`  |
 | ELLIPSE       | `EllipseData[]`      | `EllipseData[] es = in0;`      | `out0 = es;`  |
-| ANNULUS       | `AnnulusData[]`      | `AnnulusData[] as = in0;`      | `out0 = as;`  |
+| ANNULUS       | `AnnulusData[]`      | `AnnulusData[] ann = in0;`     | `out0 = ann;` |
 | POLYGON       | `PolygonData[]`      | `PolygonData[] ps = in0;`      | `out0 = ps;`  |
 | CONTOUR_POINT | `ContourPointData[]` | `ContourPointData[] cs = in0;` | `out0 = cs;`  |
 
@@ -177,6 +177,8 @@ object result = CurrentProcess.GetModule("组合模块1.图像源1").GetValue("H
 ---
 
 ## 6. 通信发送
+
+VM 脚本层不支持直接发送控制器 IO 或通信协议（TCP/UDP/串口等）。如需通信能力，建议改用外部程序、上位机或其他 SDK 方案，通过全局变量与 VM 脚本交换数据。
 
 ---
 
