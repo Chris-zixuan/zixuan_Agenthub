@@ -12,7 +12,7 @@
 
 ### 📊 内容总览
 
-目前共包含 **4 个 Skills** + **1 个插件文档**：
+目前共包含 **9 个 Skills** + **1 个插件文档**：
 
 #### 💻 开发辅助
 
@@ -27,7 +27,22 @@
 |--------------|------|
 | [记忆系统初始化](./memory-init) | 在当前目录一键部署 AI 记忆系统 |
 | [文件夹整理助手](./organize) | 扫描分类、清理冗余，整理混乱目录 |
+| [项目地图生成](./project-map-builder) | 为指定目录生成 PROJECT_MAP.md 结构概览 |
 | [Claude Code HUD](./Claude%20Code%20HUD) | 终端实时状态栏，显示上下文用量与 Agent 状态 |
+
+#### 🎓 学习与研究
+
+| Skill | 说明 |
+|-------|------|
+| [系统学习材料生成](./system-study) | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
+
+#### ✍️ 写作与沟通
+
+| Skill | 说明 |
+|-------|------|
+| [受众适配助手](./audience-adapter) | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
+| [SOP 文档生成](./sop-writer) | 将业务流程梳理为含 RACI 矩阵、流程图和异常处理的完整 SOP 文档 |
+| [周报/月报生成](./work-report-writer) | 从零散工作记录与 git log 生成结构化周报或月报 |
 
 > 📚 每个 Skill 的详细使用示例见 [EXAMPLES.md](./EXAMPLES.md)
 
@@ -64,7 +79,7 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 
 ### 📊 Overview
 
-**4 Skills** + **1 plugin guide**:
+**9 Skills** + **1 plugin guide**:
 
 | Skill / Plugin | Description |
 |----------------|-------------|
@@ -72,7 +87,12 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 | [MVB-COCO Annotation](./mvb-coco-annotation) | Auto-generate MVB-COCO format dataset from an image folder |
 | [Memory Init](./memory-init) | One-click AI memory system deployment |
 | [Organize](./organize) | Scan, classify, and clean up messy folders |
+| [Project Map Builder](./project-map-builder) | Generate PROJECT_MAP.md overview for a directory |
 | [Claude Code HUD](./Claude%20Code%20HUD) | Terminal status bar for context usage and agent state |
+| [System Study](./system-study) | Research a topic and produce structured HTML learning materials |
+| [Audience Adapter](./audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
+| [SOP Writer](./sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
+| [Work Report Writer](./work-report-writer) | Generate weekly/monthly reports from notes and git log |
 
 > 📚 See [EXAMPLES.md](./EXAMPLES.md) for usage examples.
 

@@ -37,6 +37,12 @@ tags: [tag1, tag2]        # 可选
 | `memory-init/` | Skill | 一键部署记忆系统（CLAUDE.md + MEMORY.md + memory/） |
 | `organize/` | Skill | 扫描分类整理混乱目录，确认后执行 |
 | `visionmaster-scripthelper/` | Skill | HiVision VisionMaster C# 脚本开发辅助 |
+| `mvb-coco-annotation/` | Skill | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
+| `audience-adapter/` | Skill | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
+| `sop-writer/` | Skill | 将业务流程梳理为含 RACI 矩阵和异常处理的完整 SOP 文档 |
+| `work-report-writer/` | Skill | 从零散工作记录与 git log 生成结构化周报或月报 |
+| `project-map-builder/` | Skill | 为指定目录生成 PROJECT_MAP.md 结构概览 |
+| `system-study/` | Skill | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
 | `Claude Code HUD/` | 文档 | HUD 状态栏插件安装与配置说明 |
 | `参考README.md` | 参考 | 完整 Skills 集合（yunshu0909/yunshu_skillshub）总览，新增 Skill 时参考其结构和分类方式 |
 
