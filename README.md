@@ -12,13 +12,14 @@
 
 ### 📊 内容总览
 
-目前共包含 **3 个 Skills** + **1 个插件文档**：
+目前共包含 **4 个 Skills** + **1 个插件文档**：
 
 #### 💻 开发辅助
 
 | Skill | 说明 |
 |-------|------|
 | [VisionMaster 脚本助手](./visionmaster-scripthelper) | HiVision VisionMaster C# 脚本开发辅助 |
+| [MVB-COCO 标注生成](./mvb-coco-annotation) | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
 
 #### 💼 效率工具
 
@@ -63,11 +64,12 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 
 ### 📊 Overview
 
-**3 Skills** + **1 plugin guide**:
+**4 Skills** + **1 plugin guide**:
 
 | Skill / Plugin | Description |
 |----------------|-------------|
 | [VisionMaster Script Helper](./visionmaster-scripthelper) | C# script development for HiVision VisionMaster |
+| [MVB-COCO Annotation](./mvb-coco-annotation) | Auto-generate MVB-COCO format dataset from an image folder |
 | [Memory Init](./memory-init) | One-click AI memory system deployment |
 | [Organize](./organize) | Scan, classify, and clean up messy folders |
 | [Claude Code HUD](./Claude%20Code%20HUD) | Terminal status bar for context usage and agent state |
