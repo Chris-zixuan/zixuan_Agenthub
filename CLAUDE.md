@@ -43,6 +43,7 @@ tags: [tag1, tag2]        # 可选
 | `work-report-writer/` | Skill | 从零散工作记录与 git log 生成结构化周报或月报 |
 | `project-map-builder/` | Skill | 为指定目录生成 PROJECT_MAP.md 结构概览 |
 | `system-study/` | Skill | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
+| `alipay-booking/` | Skill | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
 | `Claude Code HUD/` | 文档 | HUD 状态栏插件安装与配置说明 |
 | `参考README.md` | 参考 | 完整 Skills 集合（yunshu0909/yunshu_skillshub）总览，新增 Skill 时参考其结构和分类方式 |
 
