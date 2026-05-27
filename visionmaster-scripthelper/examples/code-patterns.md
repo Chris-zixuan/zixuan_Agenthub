@@ -609,16 +609,122 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 ---
 
+---
+
+## 模式 13：轮廓仪深度图转点云
+
+**场景**：从 `StereoImageData` 逐行提取有效点，转换为物理坐标点云
+
+
+```csharp
+/// <summary>
+/// 流程执行函数：深度图转点云
+/// </summary>
+public bool Process()
+{
+   
+    StereoImageData rangeImg = 深度图in;
+
+    float xScale  = rangeImg.Xscale;
+    float zScale  = rangeImg.Zscale;
+    int   xOffset = rangeImg.Xoffset;
+    int   zOffset = rangeImg.Zoffset;
+
+    int width  = rangeImg.ProfileRangeImage.Width;
+    int height = rangeImg.ProfileRangeImage.Height;
+    byte[] buf = rangeImg.ProfileRangeImage.Buffer;
+
+    // 预分配（最坏情况 width * height 个有效点）
+    float[] px = new float[width * height];
+    float[] pz = new float[width * height];
+    int ptNum = 0;
+
+    for (int row = 0; row < height; row++)
+    {
+        int rowByte = row * width * 2;
+        for (int col = 0; col < width; col++)
+        {
+            short raw = BitConverter.ToInt16(buf, rowByte + col * 2);
+            if (raw == -32768)  // 无效值跳过
+                continue;
+
+            px[ptNum] = col * xScale + xOffset;
+            pz[ptNum] = raw * zScale + zOffset;
+            ptNum++;
+        }
+    }
+
+    // 直接赋值输出（float 数组变量）
+    pXOut    = px;
+    pZOut    = pz;
+    ptNumOut = ptNum;
+
+    return true;
+}
+```
+
+> 完整示例见 [examples/05-stereo-depth-pointcloud.cs](05-stereo-depth-pointcloud.cs)
+
+---
+
+## 模式 14：深度图区间过滤并回写
+
+**场景**：将深度图中超出 Z 阈值的像素置为无效值（-32768），输出修改后的 `StereoImageData`
+
+```csharp
+/// <summary>
+/// 流程执行函数：深度图区间过滤
+/// </summary>
+public bool Process()
+{
+    StereoImageData rangeImg = 深度图in;
+
+    int width  = rangeImg.ProfileRangeImage.Width;
+    int height = rangeImg.ProfileRangeImage.Height;
+    byte[] buf = rangeImg.ProfileRangeImage.Buffer;
+
+    // Buffer 解析为 short 数组（S16）
+    short[] depth = new short[width * height];
+    for (int i = 0; i < depth.Length; i++)
+        depth[i] = BitConverter.ToInt16(buf, i * 2);
+
+    // 按阈值过滤
+    short zUpRaw   = zUpIn;   // 保留上限（原始 S16 值）
+    short zDownRaw = zDownIn; // 保留下限（原始 S16 值）
+    for (int i = 0; i < depth.Length; i++)
+    {
+        if (depth[i] != -32768 && (depth[i] > zUpRaw || depth[i] < zDownRaw))
+            depth[i] = -32768;
+    }
+
+    // 回写到 Buffer
+    byte[] outBuf = new byte[depth.Length * 2];
+    for (int i = 0; i < depth.Length; i++)
+        BitConverter.GetBytes(depth[i]).CopyTo(outBuf, i * 2);
+    rangeImg.ProfileRangeImage.Buffer = outBuf;
+
+    // 直接赋值输出 STEREO_IMAGE
+    outImage = rangeImg;
+
+    return true;
+}
+```
+
+---
+
 ## 模式组合指南
 
-| 用户需求       | 推荐模式组合           |
-| -------------- | ---------------------- |
-| 简单计算       | 模式 1 + 模式 11       |
-| 多类型数据转发 | 模式 2                 |
-| 批量数据处理   | 模式 3                 |
-| 图像滤波/检测  | 模式 4 + 模式 12       |
-| 图像处理（无需 OpenCV） | 模式 4b + 模式 12 |
-| ROI 分割/变换  | 模式 5 或 模式 6       |
-| 流程控制/分支  | 模式 7 + 模式 8        |
-| 统计/累积计算  | 模式 9                 |
-| 结果通信发送   | 任意处理模式 + 模式 10 |
+| 用户需求              | 推荐模式组合               |
+| --------------------- | -------------------------- |
+| 简单计算              | 模式 1 + 模式 11           |
+| 多类型数据转发        | 模式 2                     |
+| 批量数据处理          | 模式 3                     |
+| 图像滤波/检测         | 模式 4 + 模式 12           |
+| 图像处理（无需 OpenCV）| 模式 4b + 模式 12         |
+| ROI 分割/变换         | 模式 5 或 模式 6           |
+| 流程控制/分支         | 模式 7 + 模式 8            |
+| 统计/累积计算         | 模式 9                     |
+| 结果通信发送          | 任意处理模式 + 模式 10     |
+| 深度图转点云          | 模式 13                    |
+| 深度图区间过滤        | 模式 14                    |
+| 深度图预处理 + 转点云 | 模式 14 + 模式 13          |

@@ -1,7 +1,7 @@
 ---
 name: visionmaster-scripthelper
 description: "用户正在开发、修改或调试 VisionMaster C# 脚本（UserScript.cs / UserProperty.cs），或询问 VM 变量类型映射、模块参数读写、全局变量、图像处理等 VM 脚本具体问题时触发。优先输出可直接使用的 C# 代码。"
-version: 2.5.0
+version: 2.6.0
 author: ChrisYang
 tags:
   - VisionMaster
@@ -83,8 +83,26 @@ VM 脚本的输入输出变量在 `UserProperty.cs` 中定义，在 `UserScript.
 | IMAGE → ImageData     | IMAGE                                                                       | `ImageData`（特例，非数组）                  | `ImageData img = imgIn; imgOut = img;` |
 | 复合 → `<Type>Data[]` | POINT, ROIBOX, CIRCLE, RECT, LINE, ELLIPSE, ANNULUS, POLYGON, CONTOUR_POINT | `PointData[]`, `RoiboxData[]` …              | `PointData[] pts = in0; out0 = pts;`   |
 | 数组 → 直接用         | INT 数组, FLOAT 数组, STRING 数组, DOUBLE 数组                              | `int[]`, `float[]`, `string[]`, `double[]`   | `int[] arr = in0; out0 = arr;`         |
+| 3D 专用读取 | STEREO_IMAGE, POINT3D, POSE_INFO                                           | `StereoImageData`, `Point3DData`, `PoseInfoData[]` | 见下方"3D 变量读写"               |
 
 **特别注意**：除标量、数组和 IMAGE 外的复合类型（如 POINT, ROIBOX 等），在脚本中均映射为对应的 `<Type>Data[]` 数组类型。IMAGE 类型直接映射为 `ImageData`，不是数组。
+
+#### 3D 变量读写
+
+STEREO_IMAGE、POINT3D、POSE_INFO 等 3D 专用类型**不支持直接赋值读取**，须调用对应 Get 接口：
+
+```csharp
+// STEREO_IMAGE 读取
+StereoImageData rangeImg = 深度图in;
+
+// STEREO_IMAGE 输出（直接赋值）
+outImage = rangeImg;
+```
+
+深度图 Buffer 为 S16（每像素 2 字节），无效值为 `-32768`，物理坐标转换公式：
+`x = col * Xscale + Xoffset`，`z = raw * Zscale + Zoffset`
+
+> 完整字段说明见 [interface-quickref.md#1c](./examples/interface-quickref.md#1c-3d-专用类型)
 
 **约束**：变量名称必须保证唯一性，多个变量不能使用同一个名称。
 
@@ -222,6 +240,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 | 不确定数据结构字段名             | `references/Script.DataStruct.cs`                                         |
 | 需要遗留接口签名（仅动态名场景） | `references/Script.Interface.cs`                                          |
 | 想要操作CAD图纸，完成图纸转换等  | `examples/04-trans-CAD-file.cs`                                           |
+| 处理立体图像 / 深度图 / 点云提取 | `examples/05-stereo-depth-pointcloud.cs` 和 `references/Script.DataStruct.cs` |
 
 #### 查找 API 的强制流程
 
@@ -281,7 +300,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 | 场景                       | 状态        | 说明                                             |
 | -------------------------- | ----------- | ------------------------------------------------ |
 | 2D 脚本（标准）            | ✅ 已支持   | ScriptMethods + IProcessMethods                  |
-| 3D 脚本                    | 🔲 待扩展   | 需新增 VM3DScriptBase 基类、3D 类型映射、3D 示例 |
+| 3D 深度图 / 点云提取       | ✅ 已支持   | StereoImageData + GetStereoImageValue，示例 05   |
 | OpenCvSharp 集成           | ✅ 已支持   | 示例 02 + 模式 4                                 |
 | System.Drawing.Bitmap 集成 | ✅ 已支持   | Script.ExMethods.cs + 模式 4b                    |
 | 其他第三方库               | 🔲 按需扩展 | 新增 references + examples + 校验 .csproj        |
