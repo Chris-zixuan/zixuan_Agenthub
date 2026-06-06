@@ -12,7 +12,7 @@
 
 ### 📊 内容总览
 
-目前共包含 **10 个 Skills** + **1 个插件文档**：
+目前共包含 **11 个 Skills** + **1 个插件文档**：
 
 #### 💻 开发辅助
 
@@ -44,6 +44,7 @@
 | [受众适配助手](./audience-adapter) | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
 | [SOP 文档生成](./sop-writer) | 将业务流程梳理为含 RACI 矩阵、流程图和异常处理的完整 SOP 文档 |
 | [周报/月报生成](./work-report-writer) | 从零散工作记录与 git log 生成结构化周报或月报 |
+| [公众号文章生成](./mp-article-writor) | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
 
 > 📚 每个 Skill 的详细使用示例见 [EXAMPLES.md](./EXAMPLES.md)
 
@@ -80,7 +81,7 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 
 ### 📊 Overview
 
-**10 Skills** + **1 plugin guide**:
+**11 Skills** + **1 plugin guide**:
 
 | Skill / Plugin | Description |
 |----------------|-------------|
@@ -95,6 +96,7 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 | [Audience Adapter](./audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
 | [SOP Writer](./sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
 | [Work Report Writer](./work-report-writer) | Generate weekly/monthly reports from notes and git log |
+| [MP Article Writer](./mp-article-writor) | Turn notes into polished WeChat/Sspai articles with style check |
 
 > 📚 See [EXAMPLES.md](./EXAMPLES.md) for usage examples.
 
