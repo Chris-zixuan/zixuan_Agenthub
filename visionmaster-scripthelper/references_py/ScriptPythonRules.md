@@ -54,7 +54,7 @@ def Process(data) -> int:
 ```
 
 所有的脚本代码都要在模板代码的框架内，写在try-except 语句中。
-可参考示例代码[python-template](../examples/06-python-template.py)
+可参考示例代码[python-template](../examples/python/01-template.py)
 代码中ioHelper的定义在[ioHelper.py](./Script.ioHelper.py)
 
 # 代码生成工作流

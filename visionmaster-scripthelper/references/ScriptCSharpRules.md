@@ -8,7 +8,7 @@
 - 界面层操作 / UI 自动化
 - 非托管资源的外部封装方案
 - 通讯协议解析
-- **反编译或搜索 VM 安装目录来获取 API 信息**（只有 skill 内的 `references/` 和 `examples/` 是权威来源）
+- **反编译或搜索 VM 安装目录来获取 API 信息**（只有 skill 内的 `references/`、`examples/csharp/` 和 `examples/python/` 是权威来源）
 
 如用户需要上述能力，可建议改用外部程序、上位机或其他 SDK 方案。
 
@@ -55,7 +55,7 @@ outImage = rangeImg;
 深度图 Buffer 为 S16（每像素 2 字节），无效值为 `-32768`，物理坐标转换公式：
 `x = col * Xscale + Xoffset`，`z = raw * Zscale + Zoffset`
 
-> 完整字段说明见 [interface-quickref.md#1c](./examples/interface-quickref.md#1c-3d-专用类型)
+> 完整字段说明见 [interface-quickref.md#1c](../examples/csharp/interface-quickref.md#1c-3d-专用类型)
 
 **约束**：变量名称必须保证唯一性，多个变量不能使用同一个名称。
 
@@ -63,7 +63,7 @@ outImage = rangeImg;
 
 `ImageData` 的直接赋值（`imgOut = imgIn`）为**引用传递**，两个变量会指向同一内存。如需独立图像副本，必须通过 `ImageDataToMat` 获取 Mat，处理后再用 `MatToImageData` 生成新图像。
 
-> 完整类型映射表与读写示例见 [interface-quickref.md](./examples/interface-quickref.md#1-变量类型映射)
+> 完整类型映射表与读写示例见 [interface-quickref.md](../examples/csharp/interface-quickref.md#1-变量类型映射)
 
 ## 常见运行时错误排查
 
@@ -103,7 +103,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 }
 ```
 
-> 完整示例见 [examples/](./examples/)（基础模板、图像处理、ROI 处理）
+> 完整示例见 [examples/csharp/](../examples/csharp/)（基础模板、图像处理、ROI 处理）
 
 ## 输出要求
 
@@ -166,15 +166,15 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 | 你想做什么                       | 必须先打开阅读的文件                                                      |
 | -------------------------------- | ------------------------------------------------------------------------- |
-| 了解变量类型映射、直接赋值写法   | `examples/interface-quickref.md`                                          |
-| 把输入图像转成 Mat               | `examples/02-canny-edge-detection.cs` 和 `references/Script.ExMethods.cs` |
+| 了解变量类型映射、直接赋值写法   | `examples/csharp/interface-quickref.md`                                   |
+| 把输入图像转成 Mat               | `examples/csharp/02-canny-edge-detection.cs` 和 `references/Script.ExMethods.cs` |
 | 把输入图像转成 Bitmap            | `references/Script.ExMethods.cs`                                          |
-| 处理 ROI（裁剪、遍历、分析）     | `examples/03-roi.cs` 和 `references/Script.DataStruct.cs`                 |
-| 读取/写入多个不同类型的全局变量  | `examples/01-basic-template.cs`（查看多变量处理模式）                     |
+| 处理 ROI（裁剪、遍历、分析）     | `examples/csharp/03-roi.cs` 和 `references/Script.DataStruct.cs`          |
+| 读取/写入多个不同类型的全局变量  | `examples/csharp/01-basic-template.cs`（查看多变量处理模式）              |
 | 不确定数据结构字段名             | `references/Script.DataStruct.cs`                                         |
 | 需要遗留接口签名（仅动态名场景） | `references/Script.Interface.cs`                                          |
-| 想要操作CAD图纸，完成图纸转换等  | `examples/04-trans-CAD-file.cs`                                           |
-| 处理立体图像 / 深度图 / 点云提取 | `examples/05-stereo-depth-pointcloud.cs` 和 `references/Script.DataStruct.cs` |
+| 想要操作CAD图纸，完成图纸转换等  | `examples/csharp/04-trans-CAD-file.cs`                                    |
+| 处理立体图像 / 深度图 / 点云提取 | `examples/csharp/05-stereo-depth-pointcloud.cs` 和 `references/Script.DataStruct.cs` |
 
 #### 查找 API 的强制流程
 
@@ -182,7 +182,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 1. **立即**查阅上表中对应的文件（使用 `Read` 打开）。
 2. 若表中没有完全匹配的需求，按以下顺序逐篇查阅，直到找到答案：
-   `examples/interface-quickref.md` → `references/Script.ExMethods.cs` → 对应场景的示例文件。
+   `examples/csharp/interface-quickref.md` → `references/Script.ExMethods.cs` → 对应场景的示例文件。
 3. 如果所有 skill 内资源都找不到答案，**中断生成并明确告知用户缺少哪部分信息**，禁止去 VM 安装目录或其它路径搜索。
 
 #### 模式组合示例
@@ -191,7 +191,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 - 用户需要”ROI 网格分割并输出子区域” → 组合模式6（ROI 网格分割）+ 模式5（ROI 处理）
 - 用户需要”从全局变量获取参数、处理图像后输出” → 模式7（全局变量控制流程）+ 模式4（图像处理管道）
 
-详细模式组合指南见 [code-patterns.md](./examples/code-patterns.md#模式组合指南)。
+详细模式组合指南见 [code-patterns.md](../examples/csharp/code-patterns.md#模式组合指南)。
 
 ### Step 5：组装代码
 

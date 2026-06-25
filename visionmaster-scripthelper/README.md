@@ -1,35 +1,44 @@
 # VisionMaster 脚本开发技能
 
-> 版本 2.5.0 · 直接赋值范式 · 作者 ChrisYang
+> 版本 2.8.0 · 直接赋值范式 · 作者 ChrisYang
 
 本技能为 VisionMaster (VM) C# 脚本开发辅助能力——生成、修改、排查 VM 脚本，优先输出可直接使用的代码。
 
 ## 快速开始
 
 1. **了解规则** → 阅读 [SKILL.md](SKILL.md) 中的类型映射规则和代码生成工作流
-2. **找参考** → [examples/](examples/) 包含完整脚本示例、类型映射表、代码模式库
+2. **找参考** → [examples/csharp/](examples/csharp/) C# 脚本示例、类型映射表、代码模式库；[examples/python/](examples/python/) Python 脚本示例
 
 ## 项目结构
 
 ```
 vm-script-skill/
-├── SKILL.md                 # 技能定义（v2.5.0，直接赋值范式）
+├── SKILL.md                 # 技能定义（v2.8.0，直接赋值范式）
 ├── README.md                # 本文件
 ├── assets/
 │   └── find_msbuild.ps1     # MSBuild 查找脚本（编译校验用）
-├── examples/                # 代码生成资源（示例 + 映射表 + 模式库）
-│   ├── 01-basic-template.cs
-│   ├── 02-canny-edge-detection.cs
-│   ├── 03-roi.cs
-│   ├── 04-trans-CAD-file.cs
-│   ├── interface-quickref.md
-│   ├── code-patterns.md
-│   └── README.md
-└── references/              # 原始接口定义（查接口签名和数据结构时使用）
-    ├── Script.Interface.cs
-    ├── Script.DataStruct.cs
-    ├── Script.ExMethods.cs
-    └── README.md
+├── examples/                    # 代码生成资源（示例 + 映射表 + 模式库）
+│   ├── README.md
+│   ├── csharp/                  # C# 脚本示例与参考
+│   │   ├── interface-quickref.md
+│   │   ├── code-patterns.md
+│   │   ├── 01-basic-template.cs
+│   │   ├── 02-canny-edge-detection.cs
+│   │   ├── 03-roi.cs
+│   │   ├── 04-trans-CAD-file.cs
+│   │   └── 05-stereo-depth-pointcloud.cs
+│   └── python/                  # Python 脚本示例
+│       └── 01-template.py
+├── references/              # C# 原始接口定义（查接口签名和数据结构时使用）
+│   ├── README.md
+│   ├── Script.Interface.cs
+│   ├── Script.DataStruct.cs
+│   ├── Script.ExMethods.cs
+│   └── ScriptCSharpRules.md
+└── references_py/           # Python 脚本参考（开发规则 + 数据结构 + 运行时）
+    ├── ScriptPythonRules.md
+    ├── Script.pyDataStruct.py
+    └── Script.ioHelper.py
 ```
 
 ## 运行依赖
@@ -63,5 +72,5 @@ Get/Set 遗留接口仅在需要动态变量名访问时才使用。
 | ---------------- | ----------- |
 | 2D 脚本（标准）  | ✅ 已支持   |
 | OpenCvSharp 集成 | ✅ 已支持   |
-| 3D 脚本          | 🔲 待扩展   |
+| 3D 深度图/点云   | ✅ 已支持   |
 | 其他第三方库     | 🔲 按需扩展 |
