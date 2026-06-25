@@ -517,6 +517,8 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 **场景**：通过 TCP/PLC/Modbus 发送处理结果
 
+> **边界说明**：本模式仅限**数据发送**（将脚本计算结果通过已有通信设备发送出去）。VM 脚本层不支持协议解析、控制器 IO 发送、自定义通信协议实现。如需上述能力，建议改用外部程序或上位机方案。
+
 ```csharp
 /// <summary>
 /// 流程执行函数
@@ -535,7 +537,7 @@ public bool Process()
     }
 
     // PLC 发送
-    ret = GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData(result.ToString(), DataType.IntType);
+    ret = GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData(result.ToString(), DataType.Int);
     if (ret != 0)
     {
         ConsoleWrite("PLC 发送失败");

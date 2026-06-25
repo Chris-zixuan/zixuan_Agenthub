@@ -215,7 +215,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 - [ ] 代码基于 .NET Framework 4.6.1，未使用 4.6.1 之后的 API
 - [ ] 每个方法都有 XML 注释
 - [ ] 结构化注释（如 `//You can add your codes here`）已删除
-- [ ] 已执行或尝试执行编译校验：若 skill 安装目录下的 `assets/find_msbuild.ps1` 可运行则编译至通过；否则进行静态审查，并向用户说明”自动编译校验无法完成，请手动编译确认”
+- [ ] 已执行或尝试执行编译校验：先运行 skill 安装目录下的 `assets/find_msbuild.ps1` 定位 MSBuild.exe，找到后执行 `msbuild *.csproj` 编译至通过；若无法定位或无法运行，进行静态审查，并向用户说明”自动编译校验无法完成，请手动编译确认”
 
 ---
 
