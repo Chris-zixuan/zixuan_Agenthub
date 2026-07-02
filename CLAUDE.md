@@ -46,7 +46,6 @@ tags: [tag1, tag2]        # 可选
 | `skills/work-report-writer/` | Skill | 从零散工作记录与 git log 生成结构化周报或月报 |
 | `skills/project-map-builder/` | Skill | 为指定目录生成 PROJECT_MAP.md 结构概览 |
 | `skills/system-study/` | Skill | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
-| `skills/alipay-booking/` | Skill | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
 | `skills/mp-article-writor/` | Skill | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
 | `skills/resume-optimizer/` | Skill | 专业简历优化与生成，支持文本/Word/PDF输入，结合JD定制，输出Word+PDF+质量报告 |
 | `docs/` | 资料 | Skill 开发过程中的设计文档、变更日志、质量报告等非运行时资料 |

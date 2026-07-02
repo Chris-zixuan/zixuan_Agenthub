@@ -12,7 +12,7 @@
 
 ### 📊 内容总览
 
-目前共包含 **12 个 Skills** + **1 个插件文档**：
+目前共包含 **11 个 Skills** + **1 个插件文档**：
 
 #### 💻 开发辅助
 
@@ -28,7 +28,6 @@
 | [记忆系统初始化](./skills/memory-init) | 在当前目录一键部署 AI 记忆系统 |
 | [文件夹整理助手](./skills/organize) | 扫描分类、清理冗余，整理混乱目录 |
 | [项目地图生成](./skills/project-map-builder) | 为指定目录生成 PROJECT_MAP.md 结构概览 |
-| [支付宝流水记账](./skills/alipay-booking) | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
 | [Claude Code HUD](./Claude%20Code%20HUD) | 终端实时状态栏，显示上下文用量与 Agent 状态 |
 
 #### 🎓 学习与研究
@@ -86,7 +85,7 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 
 ### 📊 Overview
 
-**12 Skills** + **1 plugin guide**:
+**11 Skills** + **1 plugin guide**:
 
 | Skill / Plugin | Description |
 |----------------|-------------|
@@ -96,7 +95,6 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 | [Organize](./skills/organize) | Scan, classify, and clean up messy folders |
 | [Project Map Builder](./skills/project-map-builder) | Generate PROJECT_MAP.md overview for a directory |
 | [Claude Code HUD](./Claude%20Code%20HUD) | Terminal status bar for context usage and agent state |
-| [Alipay Booking](./skills/alipay-booking) | Convert Alipay CSV statements to bookkeeping Excel |
 | [System Study](./skills/system-study) | Research a topic and produce structured HTML learning materials |
 | [Audience Adapter](./skills/audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
 | [SOP Writer](./skills/sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
