@@ -94,7 +94,7 @@ public class PointData
 
 ## 3. Mat ↔ ImageData 转换
 
-见 [Script.ExMethods.cs](../references/Script.ExMethods.cs)
+见 [Script.ExMethods.cs](../../references/Script.ExMethods.cs)
 
 ```csharp
 // Mat → ImageData
@@ -108,7 +108,7 @@ Mat matImage = ImageDataToMat(imgData);
 
 ## 3b. Bitmap ↔ ImageData 转换
 
-见 [Script.ExMethods.cs](../references/Script.ExMethods.cs)
+见 [Script.ExMethods.cs](../../references/Script.ExMethods.cs)
 
 ```csharp
 // Bitmap → ImageData
@@ -241,7 +241,7 @@ VM 脚本层不支持直接发送控制器 IO 或通信协议（TCP/UDP/串口�
 | `GetStringArrayValue(string name, ref string[] value, out int count)`      | 同上           |
 | `SetStringArrayValue(string key, string[] valueArray, int index, int len)` | 同上           |
 
-完整遗留接口签名见 [Script.Interface.cs](../references/Script.Interface.cs)
+完整遗留接口签名见 [Script.Interface.cs](../../references/Script.Interface.cs)
 
 ---
 
@@ -296,7 +296,7 @@ rangeImg.ProfileRangeImage.Buffer = outBuf;
 outImage = rangeImg; // 直接赋值输出
 ```
 
-> 完整示例见 [examples/05-stereo-depth-pointcloud.cs](05-stereo-depth-pointcloud.cs)
+> 完整示例见 [05-stereo-depth-pointcloud.cs](05-stereo-depth-pointcloud.cs)
 
 ---
 

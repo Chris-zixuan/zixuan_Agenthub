@@ -88,10 +88,10 @@ public partial class UserScript : ScriptMethods, IProcessMethods
         GlobalCommunicateModule.GetDevice(1).SendData("msg");
 
         // PLC 发送
-        GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData("100", DataType.IntType);
+        GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData("100", DataType.Int);
 
         // Modbus 发送
-        GlobalCommunicateModule.GetDevice(3).GetAddress(1).SendData("100", DataType.IntType);
+        GlobalCommunicateModule.GetDevice(3).GetAddress(1).SendData("100", DataType.Int);
 
         return true;
     }

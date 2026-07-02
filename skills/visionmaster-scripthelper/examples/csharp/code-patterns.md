@@ -159,7 +159,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 }
 ```
 
-> `ImageDataToMat` / `MatToImageData` 的完整实现见 [references/Script.ExMethods.cs](../references/Script.ExMethods.cs) 或 [examples/02-canny-edge-detection.cs](02-canny-edge-detection.cs)
+> `ImageDataToMat` / `MatToImageData` 的完整实现见 [references/Script.ExMethods.cs](../../references/Script.ExMethods.cs) 或 [02-canny-edge-detection.cs](02-canny-edge-detection.cs)
 
 ---
 
@@ -237,7 +237,7 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 }
 ```
 
-> `BitmapToImageData` / `ImageDataToBitmap` 的完整实现见 [references/Script.ExMethods.cs](../references/Script.ExMethods.cs)。支持 `Format8bppIndexed`（MONO8）和 `Format24bppRgb`（RGB24）两种像素格式，转换时自动处理 stride 对齐和 BGR/RGB 通道交换。
+> `BitmapToImageData` / `ImageDataToBitmap` 的完整实现见 [references/Script.ExMethods.cs](../../references/Script.ExMethods.cs)。支持 `Format8bppIndexed`（MONO8）和 `Format24bppRgb`（RGB24）两种像素格式，转换时自动处理 stride 对齐和 BGR/RGB 通道交换。
 
 ---
 
@@ -517,6 +517,8 @@ public partial class UserScript : ScriptMethods, IProcessMethods
 
 **场景**：通过 TCP/PLC/Modbus 发送处理结果
 
+> **边界说明**：本模式仅限**数据发送**（将脚本计算结果通过已有通信设备发送出去）。VM 脚本层不支持协议解析、控制器 IO 发送、自定义通信协议实现。如需上述能力，建议改用外部程序或上位机方案。
+
 ```csharp
 /// <summary>
 /// 流程执行函数
@@ -535,7 +537,7 @@ public bool Process()
     }
 
     // PLC 发送
-    ret = GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData(result.ToString(), DataType.IntType);
+    ret = GlobalCommunicateModule.GetDevice(2).GetAddress(1).SendData(result.ToString(), DataType.Int);
     if (ret != 0)
     {
         ConsoleWrite("PLC 发送失败");
@@ -663,7 +665,7 @@ public bool Process()
 }
 ```
 
-> 完整示例见 [examples/05-stereo-depth-pointcloud.cs](05-stereo-depth-pointcloud.cs)
+> 完整示例见 [05-stereo-depth-pointcloud.cs](05-stereo-depth-pointcloud.cs)
 
 ---
 

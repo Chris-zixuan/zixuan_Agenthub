@@ -17,6 +17,7 @@ zixuan_Agenthub/
 │       ├── examples/     # 可选，代码示例或输出样本
 │       ├── assets/       # 可选，脚本、模板等资源文件
 │       └── scripts/      # 可选，可执行脚本
+├── _templates/           # Skill 模板（vm-project 等子项目脚手架）
 ├── docs/                 # 非 Skill 资料（设计文档、变更日志、开发报告等）
 └── Claude Code HUD/      # 插件/工具文档
 ```
@@ -39,15 +40,16 @@ tags: [tag1, tag2]        # 可选
 |------|------|------|
 | `skills/memory-init/` | Skill | 一键部署记忆系统（CLAUDE.md + MEMORY.md + memory/） |
 | `skills/organize/` | Skill | 扫描分类整理混乱目录，确认后执行 |
-| `skills/visionmaster-scripthelper/` | Skill | HiVision VisionMaster C# 脚本开发辅助 |
+| `skills/visionmaster-scripthelper/` | Skill | HiVision VisionMaster C#/Python 脚本开发辅助 |
 | `skills/mvb-coco-annotation/` | Skill | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
 | `skills/audience-adapter/` | Skill | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
 | `skills/sop-writer/` | Skill | 将业务流程梳理为含 RACI 矩阵和异常处理的完整 SOP 文档 |
 | `skills/work-report-writer/` | Skill | 从零散工作记录与 git log 生成结构化周报或月报 |
 | `skills/project-map-builder/` | Skill | 为指定目录生成 PROJECT_MAP.md 结构概览 |
 | `skills/system-study/` | Skill | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
+| `skills/alipay-booking/` | Skill | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
 | `skills/mp-article-writor/` | Skill | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
-| `skills/resume-optimizer/` | Skill | 专业简历优化与生成，支持文本/Word/PDF输入，结合JD定制，输出Word+PDF+质量报告 |
+| `_templates/` | 模板 | Skill 脚手架模板（VM 项目等） |
 | `docs/` | 资料 | Skill 开发过程中的设计文档、变更日志、质量报告等非运行时资料 |
 | `Claude Code HUD/` | 文档 | HUD 状态栏插件安装与配置说明 |
 
@@ -75,6 +77,7 @@ for d in zixuan_Agenthub/skills/*/; do ln -s "$(pwd)/$d" "./$(basename $d)"; don
 ## 添加新内容
 
 - **Skill**：在 `skills/` 下新建目录 `skill-name/`，编写 `SKILL.md`（frontmatter 中 `name` 和 `description` 必填）
+- **模板**：Skill 脚手架模板放入 `_templates/`
 - **开发资料**：与 Skill 开发相关但非运行时需要的文档（设计稿、变更日志等）放入 `docs/<skill-name>/`
 - **插件/工具文档**：在根目录新建目录，放入说明文档即可
 

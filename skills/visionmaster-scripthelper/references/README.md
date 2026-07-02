@@ -32,4 +32,4 @@
 - `Script.ExMethods.cs` 中，`ImageDataToMat` 会根据 `ImagePixelFormate` 转换 RGB/BGR 并释放临时指针
 - `Script.ExMethods.cs` 中，`BitmapToImageData` / `ImageDataToBitmap` 处理 `System.Drawing.Bitmap` 与 `ImageData` 的互转，自动处理 stride 对齐和 BGR/RGB 通道交换；支持 `Format8bppIndexed`（MONO8）和 `Format24bppRgb`（RGB24）两种像素格式
 - `Script.DataStruct.cs` 定义了 `ImageData`、几何对象（Point/Circle/Rect/Line/Roibox）等核心数据结构
-- 3D 相关数据结构（`PointCloudData` 等）已预留但暂不在 skill 支持范围内
+- 3D 相关数据结构中，`StereoImageData`（深度图读取与点云坐标提取）已支持；`PointCloudData` 结构体解析暂未纳入示例覆盖
