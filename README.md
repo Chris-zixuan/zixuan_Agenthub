@@ -18,34 +18,34 @@
 
 | Skill | 说明 |
 |-------|------|
-| [VisionMaster 脚本助手](./visionmaster-scripthelper) | HiVision VisionMaster C# 脚本开发辅助 |
-| [MVB-COCO 标注生成](./mvb-coco-annotation) | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
+| [VisionMaster 脚本助手](./skills/visionmaster-scripthelper) | HiVision VisionMaster C# 脚本开发辅助 |
+| [MVB-COCO 标注生成](./skills/mvb-coco-annotation) | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
 
 #### 💼 效率工具
 
 | Skill / 插件 | 说明 |
 |--------------|------|
-| [记忆系统初始化](./memory-init) | 在当前目录一键部署 AI 记忆系统 |
-| [文件夹整理助手](./organize) | 扫描分类、清理冗余，整理混乱目录 |
-| [项目地图生成](./project-map-builder) | 为指定目录生成 PROJECT_MAP.md 结构概览 |
-| [支付宝流水记账](./alipay-booking) | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
+| [记忆系统初始化](./skills/memory-init) | 在当前目录一键部署 AI 记忆系统 |
+| [文件夹整理助手](./skills/organize) | 扫描分类、清理冗余，整理混乱目录 |
+| [项目地图生成](./skills/project-map-builder) | 为指定目录生成 PROJECT_MAP.md 结构概览 |
+| [支付宝流水记账](./skills/alipay-booking) | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
 | [Claude Code HUD](./Claude%20Code%20HUD) | 终端实时状态栏，显示上下文用量与 Agent 状态 |
 
 #### 🎓 学习与研究
 
 | Skill | 说明 |
 |-------|------|
-| [系统学习材料生成](./system-study) | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
+| [系统学习材料生成](./skills/system-study) | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
 
 #### ✍️ 写作与沟通
 
 | Skill | 说明 |
 |-------|------|
-| [受众适配助手](./audience-adapter) | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
-| [SOP 文档生成](./sop-writer) | 将业务流程梳理为含 RACI 矩阵、流程图和异常处理的完整 SOP 文档 |
-| [周报/月报生成](./work-report-writer) | 从零散工作记录与 git log 生成结构化周报或月报 |
-| [公众号文章生成](./mp-article-writor) | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
-| [简历优化器](./resume-optimizer) | 专业简历优化与生成，支持文本/Word/PDF输入，结合JD定制，输出Word+PDF+质量报告 |
+| [受众适配助手](./skills/audience-adapter) | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
+| [SOP 文档生成](./skills/sop-writer) | 将业务流程梳理为含 RACI 矩阵、流程图和异常处理的完整 SOP 文档 |
+| [周报/月报生成](./skills/work-report-writer) | 从零散工作记录与 git log 生成结构化周报或月报 |
+| [公众号文章生成](./skills/mp-article-writor) | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
+| [简历优化器](./skills/resume-optimizer) | 专业简历优化与生成，支持文本/Word/PDF输入，结合JD定制，输出Word+PDF+质量报告 |
 
 > 📚 每个 Skill 的详细使用示例见 [EXAMPLES.md](./EXAMPLES.md)
 
@@ -56,7 +56,11 @@
 ```bash
 cd ~/.claude/skills/
 git clone https://github.com/Chris-zixuan/zixuan_Agenthub.git
+# 把 skills/ 下的子目录软链接到 Claude Code skills 目录
+for d in zixuan_Agenthub/skills/*/; do ln -s "$(pwd)/$d" "./$(basename $d)"; done
 ```
+
+或在 CC Switch 中添加仓库（Owner: `Chris-zixuan`, Name: `zixuan_Agenthub`, Subdirectory: `skills`）一键安装。
 
 安装后在 Claude Code 中通过 `/skill-name` 调用，或直接用自然语言描述需求触发。
 
@@ -86,19 +90,19 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 
 | Skill / Plugin | Description |
 |----------------|-------------|
-| [VisionMaster Script Helper](./visionmaster-scripthelper) | C# script development for HiVision VisionMaster |
-| [MVB-COCO Annotation](./mvb-coco-annotation) | Auto-generate MVB-COCO format dataset from an image folder |
-| [Memory Init](./memory-init) | One-click AI memory system deployment |
-| [Organize](./organize) | Scan, classify, and clean up messy folders |
-| [Project Map Builder](./project-map-builder) | Generate PROJECT_MAP.md overview for a directory |
+| [VisionMaster Script Helper](./skills/visionmaster-scripthelper) | C# script development for HiVision VisionMaster |
+| [MVB-COCO Annotation](./skills/mvb-coco-annotation) | Auto-generate MVB-COCO format dataset from an image folder |
+| [Memory Init](./skills/memory-init) | One-click AI memory system deployment |
+| [Organize](./skills/organize) | Scan, classify, and clean up messy folders |
+| [Project Map Builder](./skills/project-map-builder) | Generate PROJECT_MAP.md overview for a directory |
 | [Claude Code HUD](./Claude%20Code%20HUD) | Terminal status bar for context usage and agent state |
-| [Alipay Booking](./alipay-booking) | Convert Alipay CSV statements to bookkeeping Excel |
-| [System Study](./system-study) | Research a topic and produce structured HTML learning materials |
-| [Audience Adapter](./audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
-| [SOP Writer](./sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
-| [Work Report Writer](./work-report-writer) | Generate weekly/monthly reports from notes and git log |
-| [MP Article Writer](./mp-article-writor) | Turn notes into polished WeChat/Sspai articles with style check |
-| [Resume Optimizer](./resume-optimizer) | Professional resume optimization, supports text/Word/PDF input, JD matching, outputs Word+PDF+report |
+| [Alipay Booking](./skills/alipay-booking) | Convert Alipay CSV statements to bookkeeping Excel |
+| [System Study](./skills/system-study) | Research a topic and produce structured HTML learning materials |
+| [Audience Adapter](./skills/audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
+| [SOP Writer](./skills/sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
+| [Work Report Writer](./skills/work-report-writer) | Generate weekly/monthly reports from notes and git log |
+| [MP Article Writer](./skills/mp-article-writor) | Turn notes into polished WeChat/Sspai articles with style check |
+| [Resume Optimizer](./skills/resume-optimizer) | Professional resume optimization, supports text/Word/PDF input, JD matching, outputs Word+PDF+report |
 
 > 📚 See [EXAMPLES.md](./EXAMPLES.md) for usage examples.
 
@@ -107,7 +111,10 @@ A personal collection of Claude Code Skills and plugins — tools I've accumulat
 ```bash
 cd ~/.claude/skills/
 git clone https://github.com/Chris-zixuan/zixuan_Agenthub.git
+for d in zixuan_Agenthub/skills/*/; do ln -s "$(pwd)/$d" "./$(basename $d)"; done
 ```
+
+Or add in CC Switch (Owner: `Chris-zixuan`, Name: `zixuan_Agenthub`, Subdirectory: `skills`) for one-click install.
 
 ### 📄 License
 
