@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>周报 · {{REPORT_PERIOD}}</title>
+  <style>
+    :root { --ink:#172033; --muted:#617087; --line:#dce3eb; --paper:#fff; --canvas:#f4f7f8; --blue:#0d6e9e; --blue-soft:#e3f3f9; --teal:#087d72; --teal-soft:#ddf4ef; --amber:#a86000; --amber-soft:#fff1d8; --red:#b42318; --red-soft:#fee8e7; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--canvas); color:var(--ink); font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif; }
+    .page { max-width:1080px; margin:0 auto; padding:40px 24px 56px; }
+    h1,h2,h3,p { margin-top:0; } h1 { margin-bottom:0; font-size:30px; line-height:1.25; overflow-wrap:anywhere; } h2 { margin:0; font-size:20px; } h3 { margin:0; font-size:17px; }
+    .report-header { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; padding-bottom:24px; border-bottom:3px solid var(--blue); }
+    .eyebrow { margin:0 0 7px; color:var(--blue); font-size:12px; font-weight:800; letter-spacing:0; text-transform:uppercase; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px 20px; color:var(--muted); white-space:nowrap; }
+    .module { margin-top:30px; }.module-heading { display:flex; align-items:baseline; gap:11px; margin-bottom:13px; }.module-no { color:var(--blue); font-size:12px; font-weight:800; }.module-note { margin-left:auto; color:var(--muted); font-size:13px; }
+    .surface { padding:22px; background:var(--paper); border:1px solid var(--line); border-radius:8px; }.lead { margin:0 0 18px; color:#35445a; }
+    .summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line); }.summary-item { min-height:100px; padding:15px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }.summary-value { display:block; color:var(--blue); font-size:24px; font-weight:750; line-height:1.2; }.summary-label { display:block; margin-top:5px; color:var(--muted); font-size:12px; }
+    .workstream-list { display:grid; gap:16px; }.workstream { padding:22px; background:var(--paper); border:1px solid var(--line); border-left:4px solid var(--blue); border-radius:8px; }.workstream-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }.workstream-title { display:flex; align-items:center; gap:10px; }.kind { display:inline-block; padding:2px 8px; color:var(--blue); background:var(--blue-soft); border-radius:3px; font-size:12px; font-weight:800; white-space:nowrap; }.status { display:inline-block; padding:2px 8px; border-radius:3px; font-size:12px; font-weight:800; white-space:nowrap; }.done { color:var(--teal); background:var(--teal-soft); }.doing { color:var(--amber); background:var(--amber-soft); }.blocked { color:var(--red); background:var(--red-soft); }.workstream-summary { margin:13px 0 18px; color:#46566c; }
+    .pdca { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:9px; margin:0; }.pdca-item { padding:12px; border:1px solid var(--line); }.pdca-item dt { margin-bottom:4px; color:var(--blue); font-size:12px; font-weight:800; }.pdca-item dd { margin:0; color:#3d4b60; }.fact-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:9px; margin-top:14px; }.fact { padding:10px 12px; background:#f7fafb; border-left:3px solid var(--teal); }.fact-label { display:block; color:var(--muted); font-size:11px; font-weight:800; }.fact-value { display:block; margin-top:2px; font-weight:700; }
+    .two-column { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }.compact-title { margin-bottom:12px; font-size:16px; }.compact-title span { margin-right:8px; color:var(--blue); font-size:12px; }.list { margin:0; padding:0; list-style:none; }.list li { padding:12px 0; border-top:1px solid var(--line); }.list li:first-child { padding-top:0; border-top:0; }.list strong { display:block; margin-bottom:2px; }.list p { margin:0; color:#46566c; }
+    .table-wrap { overflow-x:auto; }.plan-table { width:100%; border-collapse:collapse; }.plan-table th { padding:10px 12px; color:var(--muted); background:#f1f5f7; border-bottom:1px solid var(--line); font-size:12px; text-align:left; }.plan-table td { padding:13px 12px; border-bottom:1px solid var(--line); vertical-align:top; }.plan-table tbody tr:last-child td { border-bottom:0; }.priority { display:inline-block; min-width:34px; padding:2px 7px; border-radius:3px; font-size:11px; font-weight:800; text-align:center; }.p0 { color:var(--red); background:var(--red-soft); }.p1 { color:var(--amber); background:var(--amber-soft); }.p2 { color:var(--blue); background:var(--blue-soft); }.task { font-weight:700; }.subtext { display:block; margin-top:3px; color:var(--muted); font-size:12px; }
+    .risk-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; margin:0; padding:0; list-style:none; }.risk-list li { padding:16px; background:#fffaf0; border:1px solid #f3d49c; border-left:4px solid var(--amber); }.risk-list strong { display:block; margin-bottom:5px; color:#754200; }.risk-list p { margin:0; color:#5b4930; }.footer { margin-top:30px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; text-align:center; }
+    @media (max-width:700px) { .page { padding:26px 16px 40px; }.report-header { display:block; }.meta { margin-top:14px; }.module-note { display:none; }.surface,.workstream { padding:18px; }.workstream-head { display:block; }.status { margin-top:9px; }.pdca { grid-template-columns:1fr; }.table-wrap { overflow:visible; }.plan-table,.plan-table tbody { display:block; }.plan-table thead { display:none; }.plan-table tr { display:grid; grid-template-columns:48px minmax(0,1fr); gap:0 12px; padding:12px 0; border-bottom:1px solid var(--line); }.plan-table tbody tr:last-child { border-bottom:0; }.plan-table td { width:auto; padding:0; border:0; }.plan-table td:last-child { grid-column:2; margin-top:4px; color:var(--muted); font-size:12px; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="report-header">
+      <div><p class="eyebrow">Weekly Work Report</p><h1>周报 · {{REPORT_PERIOD}}</h1></div>
+      <div class="meta"><span>汇报人：{{OWNER}}</span><span>范围：{{SCOPE}}</span><span>{{OVERALL_STATUS}}</span></div>
+    </header>
+
+    <!-- Optional module: keep only when the report has a useful overall conclusion or metrics. -->
+    <section class="module">
+      <div class="module-heading"><span class="module-no">01</span><h2>{{SUMMARY_TITLE}}</h2><span class="module-note">{{SUMMARY_NOTE}}</span></div>
+      <div class="surface">
+        <p class="lead">{{SUMMARY_TEXT}}</p>
+        <div class="summary-grid">
+          <!-- Repeat or remove .summary-item. Do not keep empty metrics. -->
+          <article class="summary-item"><span class="summary-value">{{METRIC_VALUE}}</span><span class="summary-label">{{METRIC_LABEL}}</span></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional module: this is a list of workstreams, not a fixed project count. Repeat or remove .workstream. -->
+    <section class="module">
+      <div class="module-heading"><span class="module-no">02</span><h2>{{WORKSTREAMS_TITLE}}</h2><span class="module-note">{{WORKSTREAMS_NOTE}}</span></div>
+      <div class="workstream-list">
+        <article class="workstream">
+          <div class="workstream-head"><div class="workstream-title"><span class="kind">{{WORKSTREAM_KIND}}</span><h3>{{WORKSTREAM_NAME}}</h3></div><span class="status {{WORKSTREAM_STATUS_CLASS}}">{{WORKSTREAM_STATUS}}</span></div>
+          <p class="workstream-summary">{{WORKSTREAM_SUMMARY}}</p>
+          <!-- Keep only PDCA fields supported by facts. Remove the whole dl when PDCA is not useful. -->
+          <dl class="pdca">
+            <div class="pdca-item"><dt>Plan / 计划</dt><dd>{{WORKSTREAM_PLAN}}</dd></div>
+            <div class="pdca-item"><dt>Do / 执行</dt><dd>{{WORKSTREAM_DO}}</dd></div>
+            <div class="pdca-item"><dt>Check / 检查</dt><dd>{{WORKSTREAM_CHECK}}</dd></div>
+            <div class="pdca-item"><dt>Act / 改进</dt><dd>{{WORKSTREAM_ACT}}</dd></div>
+          </dl>
+          <!-- Optional fact fields: duplicate or remove as needed. -->
+          <div class="fact-grid"><div class="fact"><span class="fact-label">{{FACT_LABEL}}</span><span class="fact-value">{{FACT_VALUE}}</span></div></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Optional module: rename this section to match its actual content, such as "专项工作" or "知识沉淀". -->
+    <section class="module">
+      <div class="module-heading"><span class="module-no">03</span><h2>{{OPTIONAL_SECTION_TITLE}}</h2><span class="module-note">{{OPTIONAL_SECTION_NOTE}}</span></div>
+      <div class="two-column">
+        <!-- Repeat, remove, or use only one .surface. -->
+        <article class="surface"><h3 class="compact-title">{{ITEM_TITLE}}</h3><ul class="list"><li><strong>{{ITEM_RESULT}}</strong><p>{{ITEM_DETAIL}}</p></li></ul></article>
+      </div>
+    </section>
+
+    <!-- Optional module: remove when there are no confirmed next-week actions. -->
+    <section class="module">
+      <div class="module-heading"><span class="module-no">04</span><h2>下周计划</h2><span class="module-note">按优先级安排执行</span></div>
+      <div class="surface table-wrap"><table class="plan-table"><thead><tr><th>优先级</th><th>事项 / 完成标准</th><th>时间</th></tr></thead><tbody>
+        <!-- Repeat or remove rows. Set p0, p1, or p2 on the priority element. -->
+        <tr><td data-label="优先级"><span class="priority p1">{{PRIORITY}}</span></td><td data-label="事项"><span class="task">{{NEXT_ACTION}}</span><span class="subtext">完成标准：{{NEXT_ACTION_CRITERIA}} · 负责人：{{NEXT_ACTION_OWNER}} · 依赖：{{NEXT_ACTION_DEPENDENCY}}</span></td><td data-label="时间">{{NEXT_ACTION_TIME}}</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <!-- Optional module: remove when there are no risks or coordination requests. -->
+    <section class="module">
+      <div class="module-heading"><span class="module-no">05</span><h2>风险与协调事项</h2><span class="module-note">需要提前关注与推进</span></div>
+      <ol class="risk-list">
+        <!-- Repeat or remove li items. -->
+        <li><strong>{{RISK_TITLE}}</strong><p>影响：{{RISK_IMPACT}}<br>应对：{{RISK_ACTION}}<br>协调：{{RISK_COORDINATION}}</p></li>
+      </ol>
+    </section>
+
+    <footer class="footer">{{FOOTER_TEXT}}</footer>
+  </main>
+</body>
+</html>

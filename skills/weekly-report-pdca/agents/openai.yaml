@@ -1,0 +1,7 @@
+interface:
+  display_name: "周报 PDCA"
+  short_description: "按结果导向与 PDCA 生成清晰的中文周报模板"
+  default_prompt: "使用 $weekly-report-pdca 基于以下工作记录生成一份 PDCA 周报，包含本周摘要、项目进展、下周计划、风险与协调事项，并在需要时使用 HTML 模板。"
+
+policy:
+  allow_implicit_invocation: true
