@@ -591,7 +591,7 @@ Usage ██░░░░░░░░ 25% (1h 30m / 5h)              # 订阅额�
 /visionmaster-scripthelper  # VisionMaster 脚本助手
 /audience-adapter           # 受众适配助手
 /sop-writer                 # SOP 文档生成
-/obsidian                   # Obsidian 知识库（三层合一）
+/yzx-obsidian                # Obsidian 知识库（三层合一）
 /weekly-report-pdca         # 周报生成 PDCA
 /workbuddy-auto-checkin     # WorkBuddy 每日自动签到
 ```

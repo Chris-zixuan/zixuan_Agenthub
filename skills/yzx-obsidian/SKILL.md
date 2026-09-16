@@ -1,8 +1,8 @@
 ---
-name: obsidian
+name: yzx-obsidian
 description: 'Obsidian 知识库统一操作入口，按意图分三层路由。① 工具层——用官方 CLI 移动/重命名笔记（自动更新全库 wikilink）、读写 frontmatter 属性、搜索、查断链与孤立页；② 分析层——全库体检与整体分析，拆子集并行分析 + 量化扫描，产出结构化报告；③ 运维层——每日日志写完后的一键增量维护（frontmatter 补全、项目任务快照、index.md 更新、项目活跃度、交叉引用发现）。触发词：移动/重命名笔记、批量改属性、查断链/孤页、搜索笔记、命令行操作 Obsidian、分析整个知识库、知识库体检、梳理库结构与空白、找重复和陈旧内容、生成知识库分析报告、vault audit、更新知识库、同步知识库、更新我的知识库、交叉引用、知识发现、项目活跃度检查、健康看板扫描。工作空间为用户的 Obsidian 知识库。'
 agent_created: true
-skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/obsidian；Windows: D:/个人项目/zixuan_Agenthub/skills/obsidian"
+skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsidian；Windows: D:/个人项目/zixuan_Agenthub/skills/yzx-obsidian"
 ---
 
 # Obsidian 知识库操作
