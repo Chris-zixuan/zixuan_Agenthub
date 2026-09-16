@@ -95,6 +95,47 @@ ln -s "/Users/<user>/个人项目/zixuan_Agenthub/skills/workbuddy-auto-checkin"
 **收编流程**：把本机 agent 创建的 skill 移入 `skills/` → 补齐前文 frontmatter 规范（含 `skill_path`）→
 同步 README / EXAMPLES / CLAUDE 三处 → 提交推送 → 把本机 `~/.workbuddy/skills/<name>` 换成指向仓库的软链接。
 
+## 改名 / 删除 Skill 的引用点清单（务必逐项过）
+
+改一个 Skill 的名字或删掉它，波及范围**远超出仓库** —— 只改目录名必然留下死引用。
+按下面逐项核对（清单来自 2026-09-16 `obsidian` → `yzx-obsidian` 改名的实际教训）：
+
+| # | 引用点 | 说明 |
+|---|--------|------|
+| 1 | 目录名 与 `frontmatter.name` | 两者必须一致；且须匹配 `^[a-z0-9-]+$`（见下） |
+| 2 | `frontmatter.skill_path` | Mac 与 Windows **两条路径都要改** |
+| 3 | `README.md` | **中英文两张表都要改** —— 英文表最易漏 |
+| 4 | `EXAMPLES.md` | 章节标题 + 末尾斜杠命令清单 |
+| 5 | `CLAUDE.md` | 上文「当前内容」表 |
+| 6 | 本机软链接 | 旧链接移入回收站（`trash`，不用 `rm`），重建为新名 |
+| 7 | **WorkBuddy 自动化任务** | prompt 里常写死 skill 文件绝对路径 —— **最易漏，且到点才爆** |
+| 8 | `~/.workbuddy/MEMORY.md` | 长期记忆中记录的 skill 路径 |
+| 9 | 其他 Skill 的交叉引用 | 在仓库内 grep 旧名（当前无此类引用，需保持） |
+
+**验证方式**（三条都要跑，缺一不可）：
+
+```bash
+# 1. 仓库内旧名残留（0 命中才算干净）
+grep -rn "skills/<old>" . --include="*.md"
+
+# 2. 本机软链接解析正常
+ls -l ~/.workbuddy/skills/<new>
+
+# 3. 自动化任务的引用 —— 无批量检索手段，只能逐个 view 核对 prompt
+```
+
+> ⚠️ **macOS 的 `grep` 是 BSD 版，不支持 BRE 的 `\|` 或运算** —— `grep "a\|b"` 会静默返回空结果（exit 1），
+> 极易据此误判「已无残留」。一律用 `grep -E "a|b"`。
+>
+> ⚠️ 同理，**改完文件要用 `sed -n 'Np'` 或 grep 复核落盘结果**，不要只信编辑工具的「成功」返回。
+
+### Skill 命名规范
+
+`name` 与目录名**必须以小写字母、数字、连字符组成**（`^[a-z0-9-]+$`），且不得以连字符开头/结尾或含连续连字符。
+
+- 依据：`skill-creator` 插件的 `scripts/quick_validate.py` 会据此校验，驼峰（如 `YzxObsidian`）判不合格。
+- 实际影响：WorkBuddy 加载期**未发现**格式校验（驼峰大概率能加载），但会破坏官方打包/市场分发流程，且与全生态（内置 26 个 + 市场 + 本机）命名风格脱节。
+
 ## 添加新内容
 
 - **Skill**：在 `skills/` 下新建目录 `skill-name/`，编写 `SKILL.md`（frontmatter 中 `name` 和 `description` 必填，`name` 必须与目录名一致）
