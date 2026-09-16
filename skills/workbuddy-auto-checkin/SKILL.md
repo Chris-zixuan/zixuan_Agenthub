@@ -1,6 +1,6 @@
 ---
 name: workbuddy-auto-checkin
-description: 'WorkBuddy「Buddy 加油站」每日签到自动化搭建 Skill（纯签到，不含失败通知）。当用户要求"每天自动签到 WorkBuddy"、"自动领 Buddy 加油站积分"、"自动领 100 积分"、"设置 WorkBuddy 每日签到"、"把签到做成自动化"时使用。原理是只读本机 WorkBuddy 登录态的 accessToken，直接调用官方签到接口（无需点击 GUI、无需 OCR、无需第三方 Skill），再把自带脚本落位到稳定路径并创建 WorkBuddy 自带每日 09:00 自动化。安全约束：只读登录态、绝不打印 token、不修改登录态文件、不安装 Electron、不建系统级定时任务。若需要"签到失败推微信"，请改用带通知版技能。'
+description: 'WorkBuddy「Buddy 加油站」每日签到自动化搭建 Skill。当用户要求"每天自动签到 WorkBuddy"、"自动领 Buddy 加油站积分"、"自动领 100 积分"、"设置 WorkBuddy 每日签到"、"把签到做成自动化"时使用。原理是只读本机 WorkBuddy 登录态的 accessToken，直接调用官方签到接口（无需点击 GUI、无需 OCR、无需第三方 Skill），再把自带脚本落位到稳定路径并创建 WorkBuddy 自带每日 09:00 自动化。安全约束：只读登录态、绝不打印 token、不修改登录态文件、不安装 Electron、不建系统级定时任务。脚本内含一条默认休眠的失败推送通道（需用户自建 ~/.workbuddy/scripts/notify_config.json 才生效），不创建该文件即为纯签到。'
 version: 1.1.0
 author: ChrisYang
 tags:
@@ -18,7 +18,11 @@ WorkBuddy 的「Buddy 加油站」每日签到本质是一次带本地登录 Tok
 **不需要**模拟点击左下角「个人信息 → Buddy 加油站 → 签到」这一套 GUI 流程（自动化代理也没有点击桌面 UI 的能力）。
 
 本 Skill 自带脚本 `scripts/workbuddy_checkin.py`，可直接拿来用。
-**本版本不含任何外部通知能力**，仅完成签到本身；若需要"签到失败推微信"，请使用 `workbuddy-checkin`（带通知版）技能。
+
+**通知能力说明（如实披露）**：脚本内含一条**默认休眠**的失败推送通道 —— 仅当用户自行创建
+`~/.workbuddy/scripts/notify_config.json` 并填入自己的企业微信 webhook / PushPlus / Bark 凭据时才会生效；
+该文件不存在时脚本静默跳过，不发起任何推送。不创建该文件即等价于「纯签到版」。
+若你需要开箱即用的失败提醒，可参阅带通知版技能 `workbuddy-checkin`。
 
 ## 关键事实（已实测验证）
 
