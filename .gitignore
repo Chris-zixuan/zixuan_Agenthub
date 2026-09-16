@@ -2,3 +2,7 @@
 .claude
 .codebuddy
 __pycache__/
+
+# 签到脚本运行期产物（不含 token，但属本机状态，不入库）
+checkin.log
+notify_config.json

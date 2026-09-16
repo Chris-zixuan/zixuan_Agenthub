@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 仓库用途
 
-这是 Chris-zixuan 的个人 Claude Code Skills 集合仓库（AgentHub）。仓库存放自定义 Skill 定义文件，安装到 `~/.claude/skills/` 后可在 Claude Code 中通过斜杠命令调用。
+这是 Chris-zixuan 的个人 Agent Skills 集合仓库（AgentHub），服务于 Claude Code 与 WorkBuddy。仓库存放自定义 Skill 定义文件，安装到 `~/.claude/skills/` 或 `~/.workbuddy/skills/` 后即可通过斜杠命令或自然语言调用。
+
+仓库同时是多设备（Windows / macOS）Skill 的统一收敛点：各处 skill 的真身都放在本仓库，各端只做软链接或复制，避免版本分叉。
 
 ## 仓库目录结构
 
@@ -15,12 +17,12 @@ zixuan_Agenthub/
 │       ├── SKILL.md      # 必须，Skill 定义主文件（YAML frontmatter + 工作流 Markdown）
 │       ├── references/   # 可选，供 Skill 在执行时 Read 的参考资料
 │       ├── examples/     # 可选，代码示例或输出样本
-│       ├── assets/       # 可选，脚本、模板等资源文件
+│       ├── assets/       # 可选，模板、资源文件
 │       └── scripts/      # 可选，可执行脚本
-├── _templates/           # Skill 模板（vm-project 等子项目脚手架）
-├── docs/                 # 非 Skill 资料（设计文档、变更日志、开发报告等）
 └── Claude Code HUD/      # 插件/工具文档
 ```
+
+> `_templates/`、`docs/` 为按需创建的可选目录（Skill 脚手架、开发资料），当前仓库中不存在，不要凭空引用。
 
 ### SKILL.md frontmatter 规范
 
@@ -38,19 +40,13 @@ tags: [tag1, tag2]        # 可选
 
 | 目录 | 类型 | 说明 |
 |------|------|------|
-| `skills/memory-init/` | Skill | 一键部署记忆系统（CLAUDE.md + MEMORY.md + memory/） |
-| `skills/organize/` | Skill | 扫描分类整理混乱目录，确认后执行 |
 | `skills/visionmaster-scripthelper/` | Skill | HiVision VisionMaster C#/Python 脚本开发辅助 |
-| `skills/mvb-coco-annotation/` | Skill | 将图片目录自动转换为 MVB-COCO 格式分类数据集 |
+| `skills/organize/` | Skill | 扫描分类整理混乱目录，确认后执行 |
+| `skills/workbuddy-auto-checkin/` | Skill | WorkBuddy「Buddy 加油站」每日签到自动化（接口直签 + 定时任务） |
+| `skills/obsidian-kb-update/` | Skill | Obsidian 知识库日常维护：日志整理、交叉引用、健康体检、总索引 |
+| `skills/weekly-report-pdca/` | Skill | 结果导向 + PDCA 闭环的中文研发周报（先 Markdown 后 HTML） |
 | `skills/audience-adapter/` | Skill | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
 | `skills/sop-writer/` | Skill | 将业务流程梳理为含 RACI 矩阵和异常处理的完整 SOP 文档 |
-| `skills/work-report-writer/` | Skill | 从零散工作记录与 git log 生成结构化周报或月报 |
-| `skills/project-map-builder/` | Skill | 为指定目录生成 PROJECT_MAP.md 结构概览 |
-| `skills/system-study/` | Skill | 给定领域/技术，自主调研并产出结构化 HTML 学习材料 |
-| `skills/alipay-booking/` | Skill | 一键将支付宝交易流水 CSV 整理为随手记记账 Excel |
-| `skills/mp-article-writor/` | Skill | 将素材整理为公众号/少数派长文，含行文自检与配图 prompt |
-| `_templates/` | 模板 | Skill 脚手架模板（VM 项目等） |
-| `docs/` | 资料 | Skill 开发过程中的设计文档、变更日志、质量报告等非运行时资料 |
 | `Claude Code HUD/` | 文档 | HUD 状态栏插件安装与配置说明 |
 
 ## 安装到本地
@@ -74,12 +70,23 @@ for d in zixuan_Agenthub/skills/*/; do ln -s "$(pwd)/$d" "./$(basename $d)"; don
 
 安装后在 Claude Code 中通过 `/skill-name` 调用，或用自然语言描述触发。
 
+### WorkBuddy 用户
+
+WorkBuddy 读取 `~/.workbuddy/skills/`，把需要的 skill 目录复制或软链接过去即可（不需要全量安装）：
+
+```bash
+ln -s "/Users/<user>/个人项目/zixuan_Agenthub/skills/workbuddy-auto-checkin" ~/.workbuddy/skills/workbuddy-auto-checkin
+```
+
 ## 添加新内容
 
-- **Skill**：在 `skills/` 下新建目录 `skill-name/`，编写 `SKILL.md`（frontmatter 中 `name` 和 `description` 必填）
-- **模板**：Skill 脚手架模板放入 `_templates/`
-- **开发资料**：与 Skill 开发相关但非运行时需要的文档（设计稿、变更日志等）放入 `docs/<skill-name>/`
+- **Skill**：在 `skills/` 下新建目录 `skill-name/`，编写 `SKILL.md`（frontmatter 中 `name` 和 `description` 必填，`name` 必须与目录名一致）
+- **脚本**：随 Skill 使用的可执行脚本放入该 Skill 的 `scripts/` 子目录，并在 SKILL.md 中用相对路径引用
+- **模板**：Skill 脚手架模板放入 `_templates/`（按需创建）
+- **开发资料**：与 Skill 开发相关但非运行时需要的文档（设计稿、变更日志等）放入 `docs/<skill-name>/`（按需创建）
 - **插件/工具文档**：在根目录新建目录，放入说明文档即可
+
+排查建议：仓库根有一份 `.gitignore`，Skill 运行期产生的状态文件（如日志、本机配置）应追加进去，不要提交。
 
 ## 更新文档的工作流
 
