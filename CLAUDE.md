@@ -72,11 +72,28 @@ for d in zixuan_Agenthub/skills/*/; do ln -s "$(pwd)/$d" "./$(basename $d)"; don
 
 ### WorkBuddy 用户
 
-WorkBuddy 读取 `~/.workbuddy/skills/`，把需要的 skill 目录复制或软链接过去即可（不需要全量安装）：
+WorkBuddy 读取 `~/.workbuddy/skills/`。**本仓库的 skill 一律用软链接安装**，保证单一真源 —— 改仓库即全局生效，不会产生本地副本分叉：
 
 ```bash
 ln -s "/Users/<user>/个人项目/zixuan_Agenthub/skills/workbuddy-auto-checkin" ~/.workbuddy/skills/workbuddy-auto-checkin
 ```
+
+## 安装方式：按来源区分（硬规则）
+
+`~/.workbuddy/skills/` 下会同时存在不同来源的 skill，**不要一刀切**：
+
+| 来源 | 判定依据 | 安装方式 |
+|------|----------|----------|
+| **本仓库** | SKILL.md frontmatter 含 `skill_path` 指向 Agenthub | **软链接**（`ln -s`） |
+| **WorkBuddy 市场** | 目录内含 `_skillhub_meta.json`（`"source": "marketplace"`） | **真实目录**，不得改软链接 |
+| **本机 agent 创建、尚未入库** | 有 `agent_created: true` 但无 `skill_path` | 暂保持真实目录；收编入库后改软链接 |
+
+> 判定**必须看引用关系（`skill_path` / `_skillhub_meta.json`），不能只看目录名**。
+>
+> 市场安装的 skill 由市场机制维护，改成软链接会被后续更新破坏。
+
+**收编流程**：把本机 agent 创建的 skill 移入 `skills/` → 补齐前文 frontmatter 规范（含 `skill_path`）→
+同步 README / EXAMPLES / CLAUDE 三处 → 提交推送 → 把本机 `~/.workbuddy/skills/<name>` 换成指向仓库的软链接。
 
 ## 添加新内容
 
