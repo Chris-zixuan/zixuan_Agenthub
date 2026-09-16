@@ -43,7 +43,7 @@ tags: [tag1, tag2]        # 可选
 | `skills/visionmaster-scripthelper/` | Skill | HiVision VisionMaster C#/Python 脚本开发辅助 |
 | `skills/organize/` | Skill | 扫描分类整理混乱目录，确认后执行 |
 | `skills/workbuddy-auto-checkin/` | Skill | WorkBuddy「Buddy 加油站」每日签到自动化（接口直签 + 定时任务） |
-| `skills/obsidian-kb-update/` | Skill | Obsidian 知识库日常维护：日志整理、交叉引用、健康体检、总索引 |
+| `skills/obsidian/` | Skill | Obsidian 知识库三层合一：官方 CLI 操作 / 全库体检分析 / 日志增量维护 |
 | `skills/weekly-report-pdca/` | Skill | 结果导向 + PDCA 闭环的中文研发周报（先 Markdown 后 HTML） |
 | `skills/audience-adapter/` | Skill | 向上汇报/跨部门沟通，按受众角色自动调整信息粒度与语言风格 |
 | `skills/sop-writer/` | Skill | 将业务流程梳理为含 RACI 矩阵和异常处理的完整 SOP 文档 |

@@ -33,7 +33,7 @@
 
 | Skill | 说明 |
 |-------|------|
-| [Obsidian 知识库更新](./skills/obsidian-kb-update) | 知识库日常维护：日志整理、交叉引用、健康体检、总索引同步 |
+| [Obsidian 知识库操作](./skills/obsidian) | 三层合一：官方 CLI 操作笔记（自动更新 wikilink）/ 全库体检与整体分析 / 日志写完后的一键增量维护 |
 | [周报生成 PDCA](./skills/weekly-report-pdca) | 结果导向 + PDCA 闭环的中文研发周报，先出 Markdown 再出 HTML |
 
 #### ✍️ 写作与沟通
@@ -93,7 +93,7 @@ The repo also serves as the single source of truth for skills scattered across m
 | [Organize](./skills/organize) | Scan, classify, and clean up messy folders |
 | [WorkBuddy Auto Check-in](./skills/workbuddy-auto-checkin) | Direct-API daily check-in for WorkBuddy, plus a scheduled WorkBuddy automation |
 | [Claude Code HUD](./Claude%20Code%20HUD) | Terminal status bar for context usage and agent state |
-| [Obsidian KB Update](./skills/obsidian-kb-update) | Obsidian vault maintenance: logs, cross-refs, health scan, index sync |
+| [Obsidian Vault](./skills/obsidian) | Three layers: official CLI ops (auto-updates wikilinks) / full-vault audit / post-journal incremental maintenance |
 | [Weekly Report PDCA](./skills/weekly-report-pdca) | Result-oriented Chinese dev weekly reports with a PDCA loop |
 | [Audience Adapter](./skills/audience-adapter) | Tailor reports and updates by audience role (CEO / VP / Tech / Ops) |
 | [SOP Writer](./skills/sop-writer) | Turn a process description into a full SOP with RACI and flowchart |
