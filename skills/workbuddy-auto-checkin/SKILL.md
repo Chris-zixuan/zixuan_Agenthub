@@ -1,7 +1,7 @@
 ---
 name: workbuddy-auto-checkin
 description: 'WorkBuddy「Buddy 加油站」每日签到自动化搭建 Skill。当用户要求"每天自动签到 WorkBuddy"、"自动领 Buddy 加油站积分"、"自动领 100 积分"、"设置 WorkBuddy 每日签到"、"把签到做成自动化"时使用。原理是只读本机 WorkBuddy 登录态的 accessToken，直接调用官方签到接口（无需点击 GUI、无需 OCR、无需第三方 Skill），再把自带脚本落位到稳定路径并创建 WorkBuddy 自带每日 09:00 自动化。安全约束：只读登录态、绝不打印 token、不修改登录态文件、不安装 Electron、不建系统级定时任务。脚本内含一条默认休眠的失败推送通道（需用户自建 ~/.workbuddy/scripts/notify_config.json 才生效），不创建该文件即为纯签到。'
-version: 1.1.0
+version: 1.2.1
 author: ChrisYang
 tags:
   - WorkBuddy
@@ -120,6 +120,164 @@ WorkBuddy 的「Buddy 加油站」每日签到本质是一次带本地登录 Tok
 - 任何输出（终端、日志、汇报）都不得包含真实 token；脚本已脱敏，代理也不要回显凭据。
 - 不安装 Electron、不创建系统级定时任务；只用 WorkBuddy 自带自动化。
 - 不要在网页版尝试签到（网页版无签到入口，仅 PC 客户端专属）。
+
+## ⚠️ 已知阻断：接口直签已失效（2026-09-24 实测确证）
+
+**症状**：脚本退出码 1，输出
+`{"status":"error","action":null,"msg":"脚本未捕获异常: slice(None, 6, None)","detail":{}}`
+——注意 `detail` 全空，**连 `status_http` 都没有**，说明崩在**发任何 HTTP 请求之前**。
+不要按"未登录 / 断网 / 没开机"排查（登录态本身是新鲜的：`tokenType=Bearer`，
+文件 mtime 与 `lastRefreshTime` 均为当天）。
+
+**判据（只读，别打印值）**：看 `auth.accessToken` 的 `type` 是 `str` 还是 `dict`。
+
+### 根因：客户端 5.6.2 把凭据改成"静态加密（at-rest crypto）"
+
+升级埋点自证（`~/Library/Application Support/WorkBuddy/pending-telemetry/`）：
+`update-ts` 记 `fromVersion 5.5.6 → toVersion 5.6.2.39298511`，时间 2026-09-23 19:01:22，
+`update-shell` 记 `install_complete` 19:01:28；同一分钟还落了 `.legacy-localstorage-migration.done`。
+9/17–9/23 的接口直签全部跑在 5.5.6（明文 token）上 —— **是升级导致，不是偶发**。
+
+登录态现在长这样：
+
+```json
+"accessToken": {"$wbEncrypted": 1, "envelope": "<base64>"}
+// base64 解开：{"suite":1,"keyId":"<16hex>","nonce":"<b64 12B>","authTag":"<b64 16B>","ciphertext":"..."}
+```
+
+实现位置（在 `app.asar` 内）：`packages/at-rest-crypto/dist/field.mjs`；
+另有 `scheme:"asym-v1"` 的非对称保护分支。加密方案本身是标准的，已读全：
+
+- 信封 `envelope` 用 **AES-256-GCM**（`createDecipheriv("aes-256-gcm", key, iv)`）；
+- 密钥派生：`key = sha256(atRestSecretKey)`，其中 `atRestSecretKey` 是载荷
+  `{version:1, atRestSecretKey:"<32B 的 base64 字符串>"}` 里的**字符串**（对字符串取 sha256）；
+- `keyId = sha256(key).hex.slice(0,16)` —— 客户端就是用这个函数校验候选密钥
+  （`deriveAtRestKeyId(key) !== input.keyId` 即丢弃）。
+
+**所以卡点只有一个：那份 `atRestSecretKey` 载荷拿不到。** 已在下列位置逐处搜过它的
+两个可辨识字面量（`atRestSecretKey` 与当时的 `keyId` 值），含 LevelDB/二进制存储，均无命中：
+auth 目录（只有 `workbuddy-desktop.info`，无隐藏文件）、`~/.workbuddy`（app / connectors /
+顶层 json）、`~/.workbuddy-key-fallback`、`CodeBuddyExtension`、`WorkBuddy` userData。
+钥匙串也试过 5 个常见服务名（返回 44，非穷尽）。结论：密钥由客户端持有（内存/其自有加密存储），
+**外部脚本无法获取 → 接口直签这条路整体作废**，不是"参数没调对"。
+
+### 顺带发现（安全相关，值得知会用户）
+
+connector 凭据层的 master key **在磁盘上是明文的 32 字节**，三份完全一致（`0600`）：
+
+- `~/.workbuddy/connectors/<userId>/.master.key`（primary）
+- `~/.workbuddy-key-fallback/connector-keys/<sha256(userId)[:16]>.key`（备份）
+- `~/.workbuddy/app/connector-keys/<同上>.key`（备份）
+
+客户端自己的注释写明：故意**不用** OS Keychain（safeStorage），理由是"用户要求密钥不能变化、
+重装后要能恢复"；并承认"代价：master.key 文件本身没被 OS 加密，安全性依赖文件 ACL，
+ACL enforce 是本方案的主防线"。注意：**这是 connector 层的密钥，不是登录态那层**，
+两者不可混用。
+
+### 路线 A（GUI 领取）：**2026-09-24 实测打通，已成功领取**
+
+当日 09:58 用下述配方真实领到 100 积分（按钮由 `立即领取` 翻转成 `今日已领`）。**不需要截图、
+不需要算坐标、不需要屏幕录制权限**——走 AX 树的按钮直接 AXPress。
+
+#### 组件（已在本机落地）
+
+| 件 | 路径 | 说明 |
+| --- | --- | --- |
+| 启动壳 | `~/Applications/WorkBuddyCheckin.app` | 自建最小 .app，`open` 它即脱离工具沙盒。**签名后不要改动**（改了 cdhash 变、授权失效） |
+| 任务壳 | `~/Library/Application Support/wb-checkin/job.sh` | 固定不变，只负责调 osascript |
+| 任务脚本 | `~/Library/Application Support/wb-checkin/task.applescript` | **日常只改这里** |
+| 输出 | `~/Library/Application Support/wb-checkin/out.txt` | 结果落文件回收（app 的 stdout 与你无关） |
+
+关键设计：.app 里只有一行转发逻辑（读固定的 job.sh），所以**改行为不用动 .app**，
+Accessibility 授权一次长期有效。`.app` 用 `codesign --force --sign - --identifier com.local.wbcheckin` 临时签名。
+
+#### 三步配方
+
+```applescript
+-- ① 脱离沙盒：open ~/Applications/WorkBuddyCheckin.app（不是直接 osascript）
+-- ② 唤醒 Chromium 的 AX 树 —— 这一步是成败关键
+tell application "WorkBuddy" to activate
+delay 1
+tell application "System Events" to tell process "WorkBuddy"
+	set value of attribute "AXManualAccessibility" to true
+	delay 2
+	set elems to entire contents
+	-- ③ 按名字找按钮并按下，不要用坐标点击
+	set hit to missing value
+	repeat with e in elems
+		try
+			if (name of e) contains "立即领取" then set hit to e
+		end try
+		if hit is not missing value then exit repeat
+	end repeat
+	if hit is not missing value then perform action "AXPress" of hit
+end tell
+-- 验证：回读，按钮名若变为「今日已领」即为成功
+```
+
+#### 四个已踩过的坑（很重要）
+
+1. **`AXEnhancedUserInterface` 不够，必须设 `AXManualAccessibility`**。
+   实测：只设前者 → AX 树仍只有 8 个节点（拿不到任何界面元素）；设后者 → 立刻涨到 **1126** 个节点，
+   `Buddy加油站·9期 / 今日可领 / 100 积分 / AXButton 立即领取` 全部可读。WorkBuddy 是 Electron，
+   默认 `accessibilitySupportEnabled=false`，不显式唤醒就是"看不见的界面"。
+2. **别指望截图**：`screencapture` 需要「屏幕录制」权限，未授予时静默不出文件
+   （表现为 `stat: No such file or directory`）。而 AX 路线根本不需要它。
+3. **`entire contents` 很慢**：1000+ 节点遍历一轮约 **60–90 秒**，脚本别设短超时；
+   `osascript` 输出在进程结束才落盘，中途看 out.txt 只有 `RUN` 一行是正常的，不是卡死。
+4. **要按「名字」定位，不要用索引**：`entire contents` 的序号在两次运行间会漂移
+   （实测 1126 → 1204），按索引按按钮迟早按错。
+
+#### 仍存在的前置条件
+
+- **会话必须已解锁**：Automation 需要活的 GUI 会话。实测 09:08 那次触发时前台是 `loginwindow`
+  （锁屏/息屏），此时 GUI 路线同样会失败 —— 所以定时任务要么换到你确实在电脑前的时间，
+  要么加"锁屏则改为推送提醒"的兜底。
+- **（2026-09-24 新增）"息屏但不锁屏"的电源前提**：**屏幕休眠本身不影响 AX 路线**，只要会话没被锁。
+  三件事互相独立，可同时满足"省电 + 永不锁屏"：
+
+  | 目标 | 设置项 | 查看命令 |
+  | --- | --- | --- |
+  | 电脑不睡（睡了任务必失败） | 系统睡眠 | `pmset -g` 的 `sleep`（`0` = 永不） |
+  | 屏幕休眠省电 | 显示器关闭延迟 | `pmset -g` 的 `displaysleep` |
+  | **永不锁屏** | 屏幕锁定延迟 | `sysadminctl -screenLock status`（只读，无需 sudo） |
+
+  macOS 27 实测：锁定延迟默认 **300 秒**（显示器关闭 5 分钟后要密码）——
+  这才是 09:08 失败的真正原因，与网络/登录态无关。
+  GUI 改：**系统设置 → 锁定屏幕 → 「屏幕保护程序启动或显示器关闭后需要密码」→ 永不**；
+  命令行等价：`sudo sysadminctl -screenLock off -password -`（`-` 交互式问密码，不进 shell 历史）。
+  两个坑：① 该值有**系统级**（`sysadminctl` 报的）与**用户级**
+  （`~/Library/Preferences/ByHost/com.apple.screensaver.<UUID>.plist` 的 `askForPasswordDelay`）两层，
+  用户级写入**不会**改变 `sysadminctl` 的读数，别据此判断失败，要看实际行为；
+  ② 工具沙盒内 **sudo 不可执行**（`operation not permitted`），系统级改动只能由用户点 GUI 或自己跑命令。
+  ③ 第三方远控（如网易UU远程 `UURemote`）会持 `PreventUserIdleDisplaySleep` 断言，`pmset -g` 显示
+  `displaysleep N (display sleep prevented by UURemoteServer)` —— 此时显示器**根本不休眠**，省电无从谈起。
+- **Accessibility 权限**：macOS 不会允许脚本自授。本机 `WorkBuddyCheckin` 首次运行即通过；
+  若哪天弹授权框，需人工点一次「好」。
+- 面板需**处于可点状态**：本次成功时「Buddy 加油站」气泡本就展开着。若气泡未展开，
+  先按 `展开 Buddy 加油站详情` 那个按钮（`AXButton`，描述即此文案），再找 `立即领取`。
+
+### 排查这类问题的手法（下次直接用，别重走弯路）
+
+用 **Python 按字节偏移**解析 `app.asar`，不要依赖 BSD grep：
+
+```python
+data = open("/Applications/WorkBuddy.app/Contents/Resources/app.asar","rb").read()
+# 用 re.finditer(re.escape(needle), data) 拿 offset，再切片打印上下文
+```
+
+三个已踩过的 BSD grep 假阴性，会导致"查不到 = 不存在"的错误结论：
+1. `grep -o` 的 `.` **不跨换行** —— 上下文给大了反而整体零匹配；
+2. `grep -r` **不搜隐藏文件/目录** —— 密钥类文件极可能以 `.` 开头，必须 `ls -a` / `find` 兜底；
+3. 沙箱里 `ps -ax` 返回**空**、`pgrep` 无输出（不是"进程没在跑"）—— 别据此判断客户端已退出。
+
+### 处置
+
+1. 当天先让用户**手动**在客户端点一次签到，保住连续天数（或直接用下面的路线 A 自动领）。
+2. 长期走 **路线 A（GUI）** —— 已实测可用，配方见下节；接口直签（路线 b）已确认不可恢复。
+3. **本 Skill 原「脚本直签」路径已作废**：`workbuddy_checkin.py` 保留仅作历史参考，
+   不要再作为每日自动化的执行体。自动化要改成走路线 A，且需先解决解锁时机与锁屏兜底
+   （改动前需用户确认）。
 
 ## 排错
 - `HTTP 400 / code=10001`：当天已签，属正常，非错误。

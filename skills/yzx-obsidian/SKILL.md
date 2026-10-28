@@ -1,6 +1,6 @@
 ---
 name: yzx-obsidian
-description: 'Obsidian 知识库统一操作入口，按意图分三层路由。① 工具层——用官方 CLI 移动/重命名笔记（自动更新全库 wikilink）、读写 frontmatter 属性、搜索、查断链与孤立页；② 分析层——全库体检与整体分析，拆子集并行分析 + 量化扫描，产出结构化报告；③ 运维层——每日日志写完后的一键增量维护（frontmatter 补全、项目任务快照、index.md 更新、项目活跃度、交叉引用发现）。触发词：移动/重命名笔记、批量改属性、查断链/孤页、搜索笔记、命令行操作 Obsidian、分析整个知识库、知识库体检、梳理库结构与空白、找重复和陈旧内容、生成知识库分析报告、vault audit、更新知识库、同步知识库、更新我的知识库、交叉引用、知识发现、项目活跃度检查、健康看板扫描。工作空间为用户的 Obsidian 知识库。'
+description: 'Obsidian 知识库统一操作入口，按意图分三层路由。① 工具层——用官方 CLI 移动/重命名笔记（自动更新全库 wikilink）、读写 frontmatter 属性、搜索、查断链与孤立页；② 分析层——全库体检与整体分析，拆子集并行分析 + 量化扫描，产出结构化报告；③ 运维层——每日日志写完后的一键增量维护（frontmatter 补全、项目复盘状态、index.md 更新、复盘缺口检查、交叉引用发现）。触发词：移动/重命名笔记、批量改属性、查断链/孤页、搜索笔记、命令行操作 Obsidian、分析整个知识库、知识库体检、梳理库结构与空白、找重复和陈旧内容、生成知识库分析报告、vault audit、更新知识库、同步知识库、更新我的知识库、交叉引用、知识发现、项目复盘检查、复盘缺口、健康看板扫描。工作空间为用户的 Obsidian 知识库。注意：本库不做项目管理（2026-10-28 起），任务与进度在外部软件。'
 agent_created: true
 skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsidian；Windows: D:/个人项目/zixuan_Agenthub/skills/yzx-obsidian"
 ---
@@ -25,8 +25,8 @@ skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsi
 |---|---|---|
 | 移动、重命名笔记；批量改属性；搜笔记；查断链/孤页/标签；命令行操作 Obsidian | 工具层 | `references/cli-reference.md` |
 | 分析整个知识库、**知识库体检**、vault audit、梳理库结构与空白、找重复和陈旧内容、生成分析报告 | 分析层 | `references/vault-audit.md` |
-| 更新知识库、同步知识库、交叉引用、知识发现、项目活跃度检查、健康看板扫描 | 运维层 | `references/kb-maintenance.md` |
-| 查目录结构、字段定义、PM 项目结构、Dataview 模板、index.md 归属 | 参考 | `references/vault-spec.md` |
+| 更新知识库、同步知识库、交叉引用、知识发现、项目复盘检查、复盘缺口、健康看板扫描 | 运维层 | `references/kb-maintenance.md` |
+| 查目录结构、字段定义、项目复盘结构、Dataview 模板、index.md 归属 | 参考 | `references/vault-spec.md` |
 
 **三层按写权限划分，互不重叠**：
 
@@ -51,7 +51,9 @@ skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsi
 
 ### 2. 协作边界（摘自 `9_系统/协作约定.md` §1，冲突时以该文件为准）
 
-**AI 绝不触碰**：`4_项目/` 下 pm 插件的管控文件；`0_Inbox/Clippings/`；`.obsidian/`。
+**AI 绝不触碰**：`0_Inbox/Clippings/`（用户私域）；`.obsidian/`（配置区）。
+
+**绝不在本库创建项目 / 任务 / 待办 / 里程碑 / 看板** —— 2026-10-28 起本库不做项目管理，`4_项目/` 与 obsidian-pm 插件均已删除，任务与进度在外部项目管理软件。项目相关内容在本库只有两类：**过程素材**（`1_归档项目/`）与**事后复盘**（`3_工作/项目复盘/`）。
 
 **需用户确认才执行**：批量重命名 / 移动（≥3 个文件，或涉及目录调整）；修改 `9_系统/` 下的规则文件、模板与索引；删除任何既有笔记；改字段名或标签词表。
 
@@ -68,13 +70,15 @@ skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsi
 
 | 用途 | 路径 |
 |---|---|
-| 库根（Mac） | `~/Documents/Obsidian/我的知识库` |
+| 库根（Mac） | `~/Obsidian/我的知识库`（2026-10-11 迁出 iCloud，改由坚果云插件单链路同步） |
 | 库根（Windows） | `C:\Users\yangz\Nutstore\1\Obsidian\我的知识库` |
 | 权威规范 | `9_系统/协作约定.md`（摘要：`AGENTS.md`） |
 | 用户精选入口 | `index.md` |
 | 全量导航 / 主题聚合 | `9_系统/MOC/知识库总索引.md`、`主题索引.md` |
 | 健康看板 | `9_系统/Dashboard/知识库健康度.md` |
-| PM 项目 | `4_项目/{项目名}/` |
+| 项目复盘（事后总结） | `3_工作/项目复盘/{项目名}.md` |
+| 归档项目素材（过程材料） | `3_工作/项目管理/1_归档项目/{项目}/` |
+| 复盘索引 / 领域看板 | `9_系统/MOC/项目复盘索引.md`、`领域看板.md` |
 | 每日日志 | `1_日志/YYYY/YYYY-MM-DD.md` |
 | 分析报告留存 | `9_系统/`（历史报告在此） |
 
@@ -94,4 +98,4 @@ skill_path: "Mac: /Users/yangzixuan/个人项目/zixuan_Agenthub/skills/yzx-obsi
 日志写完后的一键增量维护。**注意它不做总索引 / 主题索引维护** —— 见上文。
 
 **参考** → `references/vault-spec.md`
-库规范里没有、但 skill 执行需要的内容：Project Manager 的目录与字段结构、Dataview 查询模板、index.md 归属映射。
+库规范里没有、但 skill 执行需要的内容：项目复盘层的目录与写法（**读用，不代写正文**）、Dataview 查询模板、`index.md` 的结构与归属映射。
